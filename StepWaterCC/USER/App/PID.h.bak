@@ -44,7 +44,7 @@ typedef struct
     float Dx;        					//D部分
 
    
-    unsigned long int Qx;                 //输出控制量
+    signed long int Qx;                 //输出控制量
     
 }PidBufStruct;  //临时变量
 
@@ -63,8 +63,7 @@ extern PidBufStruct HeatPidBuf[MAX_TEMPRATURE_CHNALL];
 * Others:
 *********************************************************/
 //float
-//void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
-//void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
+
 void PID_BufInit(PidBufStruct *pidch);
 void PID_ParaInit(void);//PID_ParaStruct *types,float p, float i, float d);
 

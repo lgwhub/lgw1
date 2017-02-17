@@ -4,8 +4,8 @@
 .\Obj\lib_str.o: ..\USER\uC-CPU\cpu_def.h
 .\Obj\lib_str.o: ..\USER\uC-LIB\lib_def.h
 .\Obj\lib_str.o: ..\USER\App\app_cfg.h
-.\Obj\lib_str.o: C:\Keil4\ARM\RV31\Inc\stdlib.h
-.\Obj\lib_str.o: C:\Keil4\ARM\RV31\Inc\ctype.h
-.\Obj\lib_str.o: C:\Keil4\ARM\RV31\Inc\errno.h
-.\Obj\lib_str.o: C:\Keil4\ARM\RV31\Inc\limits.h
-.\Obj\lib_str.o: C:\Keil4\ARM\RV31\Inc\stdio.h
+.\Obj\lib_str.o: C:\Keil380\ARM\RV31\INC\stdlib.h
+.\Obj\lib_str.o: C:\Keil380\ARM\RV31\INC\ctype.h
+.\Obj\lib_str.o: C:\Keil380\ARM\RV31\INC\errno.h
+.\Obj\lib_str.o: C:\Keil380\ARM\RV31\INC\limits.h
+.\Obj\lib_str.o: C:\Keil380\ARM\RV31\INC\stdio.h

@@ -3,8 +3,6 @@
 
 //自动加锁定时器
 unsigned short int TimeAutoLock1;
-
-
 unsigned short int TimeAutoLock2;
 unsigned short int TimeAutoLock3;
 //#define ISP_ADDR        0x1FFFF000

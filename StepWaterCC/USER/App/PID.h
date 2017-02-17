@@ -63,13 +63,12 @@ extern PidBufStruct HeatPidBuf[MAX_TEMPRATURE_CHNALL];
 * Others:
 *********************************************************/
 //float
-//void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
-//void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
+
 void PID_BufInit(PidBufStruct *pidch);
 void PID_ParaInit(void);//PID_ParaStruct *types,float p, float i, float d);
 
 
-void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
-
+//void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
+void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error);
 #endif
 

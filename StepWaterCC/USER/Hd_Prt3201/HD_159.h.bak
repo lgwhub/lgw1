@@ -53,54 +53,48 @@
 
 //PD8--PD15 PE8--PE14 PC6--PC9 步进电机控制
 
-#define Enable_EN1				GPIO_SetBits(GPIOC,GPIO_Pin_9)
-#define Disable_EN1				GPIO_ResetBits(GPIOC,GPIO_Pin_9)
-#define Enable_CW1				GPIO_SetBits(GPIOC,GPIO_Pin_8)
-#define Disable_CW1				GPIO_ResetBits(GPIOC,GPIO_Pin_8)
-#define Enable_CLK1				GPIO_SetBits(GPIOC,GPIO_Pin_7)
-#define Disable_CLK1				GPIO_ResetBits(GPIOC,GPIO_Pin_7)
+#define SetBitEN1				GPIO_SetBits(GPIOC,GPIO_Pin_9)
+#define ClrBitEN1				GPIO_ResetBits(GPIOC,GPIO_Pin_9)
+#define SetBitCW1				GPIO_SetBits(GPIOC,GPIO_Pin_8)
+#define ClrBitCW1				GPIO_ResetBits(GPIOC,GPIO_Pin_8)
+#define SetBitCLK1				GPIO_SetBits(GPIOC,GPIO_Pin_7)
+#define ClrBitCLK1				GPIO_ResetBits(GPIOC,GPIO_Pin_7)
 
-//#define Enable_EN2				GPIO_SetBits(GPIOD,GPIO_Pin_10)
-//#define Disable_EN2				GPIO_ResetBits(GPIOD,GPIO_Pin_10)
+#define SetBitEN2				GPIO_SetBits(GPIOD,GPIO_Pin_12)
+#define ClrBitEN2				GPIO_ResetBits(GPIOD,GPIO_Pin_12)
+#define SetBitCW2				GPIO_SetBits(GPIOD,GPIO_Pin_13)
+#define ClrBitCW2				GPIO_ResetBits(GPIOD,GPIO_Pin_13)
+#define SetBitCLK2				GPIO_SetBits(GPIOD,GPIO_Pin_15)
+#define ClrBitCLK2			GPIO_ResetBits(GPIOD,GPIO_Pin_15)
 //
-#define Enable_CW2				GPIO_SetBits(GPIOD,GPIO_Pin_13)
-#define Disable_CW2				GPIO_ResetBits(GPIOD,GPIO_Pin_13)
-#define Enable_CLK2				GPIO_SetBits(GPIOD,GPIO_Pin_15)
-#define Disable_CLK2			GPIO_ResetBits(GPIOD,GPIO_Pin_15)
-//
-#define Enable_EN3				GPIO_SetBits(GPIOD,GPIO_Pin_14)
-#define Disable_EN3				GPIO_ResetBits(GPIOD,GPIO_Pin_14)
-#define Enable_CW3				GPIO_SetBits(GPIOE,GPIO_Pin_8)
-#define Disable_CW3				GPIO_ResetBits(GPIOE,GPIO_Pin_8)
-#define Enable_CLK3				GPIO_SetBits(GPIOC,GPIO_Pin_6)
-#define Disable_CLK3				GPIO_ResetBits(GPIOC,GPIO_Pin_6)
-//#define Enable_EN3				GPIO_SetBits(GPIOD,GPIO_Pin_12)
-//#define Disable_EN3				GPIO_ResetBits(GPIOD,GPIO_Pin_12)
-//#define Enable_CW2				GPIO_SetBits(GPIOD,GPIO_Pin_11)
-//#define Disable_CW2				GPIO_ResetBits(GPIOD,GPIO_Pin_11)
+#define SetBitEN3				GPIO_SetBits(GPIOD,GPIO_Pin_14)
+#define ClrBitEN3				GPIO_ResetBits(GPIOD,GPIO_Pin_14)
+#define SetBitCW3				GPIO_SetBits(GPIOE,GPIO_Pin_8)
+#define ClrBitCW3				GPIO_ResetBits(GPIOE,GPIO_Pin_8)
+#define SetBitCLK3				GPIO_SetBits(GPIOC,GPIO_Pin_6)
+#define ClrBitCLK3				GPIO_ResetBits(GPIOC,GPIO_Pin_6)
 
-#define Enable_EN4				GPIO_SetBits(GPIOE,GPIO_Pin_9)
-#define Disable_EN4				GPIO_ResetBits(GPIOE,GPIO_Pin_9)
+#define SetBitEN4				GPIO_SetBits(GPIOE,GPIO_Pin_9)
+#define ClrBitEN4				GPIO_ResetBits(GPIOE,GPIO_Pin_9)
+#define SetBitCW4				GPIO_SetBits(GPIOE,GPIO_Pin_10)
+#define ClrBitCW4				GPIO_ResetBits(GPIOE,GPIO_Pin_10)
+#define SetBitCLK4				GPIO_SetBits(GPIOE,GPIO_Pin_14)
+#define ClrBitCLK4				GPIO_ResetBits(GPIOE,GPIO_Pin_14)
 
-#define Enable_CW4				GPIO_SetBits(GPIOE,GPIO_Pin_10)
-#define Disable_CW4				GPIO_ResetBits(GPIOE,GPIO_Pin_10)
-#define Enable_CLK4				GPIO_SetBits(GPIOE,GPIO_Pin_14)
-#define Disable_CLK4				GPIO_ResetBits(GPIOE,GPIO_Pin_14)
 
-//#define Enable_EN5				GPIO_SetBits(GPIOC,GPIO_Pin_6)
-//#define Disable_EN5				GPIO_ResetBits(GPIOC,GPIO_Pin_6)
-//#define Enable_CW5				GPIO_SetBits(GPIOC,GPIO_Pin_7)
-//#define Disable_CW5				GPIO_ResetBits(GPIOC,GPIO_Pin_7)
-#define Enable_CLK5				GPIO_SetBits(GPIOE,GPIO_Pin_13)
-#define Disable_CLK5				GPIO_ResetBits(GPIOE,GPIO_Pin_13)
+#define SetBitEN5				GPIO_SetBits(GPIOD,GPIO_Pin_11)
+#define ClrBitEN5				GPIO_ResetBits(GPIOD,GPIO_Pin_11)
+#define SetBitCW5				GPIO_SetBits(GPIOD,GPIO_Pin_10)
+#define ClrBitCW5				GPIO_ResetBits(GPIOD,GPIO_Pin_10)
+#define SetBitCLK5				GPIO_SetBits(GPIOE,GPIO_Pin_13)
+#define ClrBitCLK5				GPIO_ResetBits(GPIOE,GPIO_Pin_13)
 
-//#define Enable_EN6				GPIO_SetBits(GPIOC,GPIO_Pin_8)
-//#define Disable_EN6				GPIO_ResetBits(GPIOC,GPIO_Pin_8)
-//
-//#define Enable_CW6				GPIO_SetBits(GPIOC,GPIO_Pin_9)
-//#define Disable_CW6				GPIO_ResetBits(GPIOC,GPIO_Pin_9)
-#define Enable_CLK6				GPIO_SetBits(GPIOE,GPIO_Pin_11)
-#define Disable_CLK6				GPIO_ResetBits(GPIOE,GPIO_Pin_11)
+#define SetBitEN6				GPIO_SetBits(GPIOD,GPIO_Pin_9)
+#define ClrBitEN6				GPIO_ResetBits(GPIOD,GPIO_Pin_9)
+#define SetBitCW6				GPIO_SetBits(GPIOD,GPIO_Pin_8)
+#define ClrBitCW6				GPIO_ResetBits(GPIOD,GPIO_Pin_8)
+#define SetBitCLK6				GPIO_SetBits(GPIOE,GPIO_Pin_11)
+#define ClrBitCLK6				GPIO_ResetBits(GPIOE,GPIO_Pin_11)
 
 
 //PC5 PB0  PB1
@@ -116,17 +110,22 @@
 
 
 //PD0--PD5	加热控制
-/*
-#define Swon_JSP1				GPIO_SetBits(GPIOC,GPIO_Pin_6)
-#define Swoff_JSP1			GPIO_ResetBits(GPIOC,GPIO_Pin_6)
-#define Swon_JSP2				GPIO_SetBits(GPIOC,GPIO_Pin_7)
-#define Swoff_JSP2			GPIO_ResetBits(GPIOC,GPIO_Pin_7)
-#define Swon_JSP3				GPIO_SetBits(GPIOC,GPIO_Pin_8)
-#define Swoff_JSP3			GPIO_ResetBits(GPIOC,GPIO_Pin_8)
-#define Swon_JSP4				GPIO_SetBits(GPIOC,GPIO_Pin_9)
-#define Swoff_JSP4			GPIO_ResetBits(GPIOC,GPIO_Pin_9)
-*/
-
+#define SetHeat1				GPIO_ResetBits((GPIOdD,GPIO_Pin_0)
+#define ClrHeat1			  GPIO_SetBitsGPIOD,GPIO_Pin_0)
+#define SetHeat2				GPIO_ResetBits((GPIOdD,GPIO_Pin_1)
+#define ClrHeat2			  GPIO_SetBitsGPIOD,GPIO_Pin_1)
+#define SetHeat3				GPIO_ResetBits((GPIOdD,GPIO_Pin_2)
+#define ClrHeat3			  GPIO_SetBitsGPIOD,GPIO_Pin_2)
+#define SetHeat4				GPIO_ResetBits((GPIOdD,GPIO_Pin_3)
+#define ClrHeat4			  GPIO_SetBitsGPIOD,GPIO_Pin_3)
+#define SetHeat5				GPIO_ResetBits((GPIOdD,GPIO_Pin_4)
+#define ClrHeat5			  GPIO_SetBitsGPIOD,GPIO_Pin_4)
+#define SetHeat6				GPIO_ResetBits((GPIOdD,GPIO_Pin_5)
+#define ClrHeat6			  GPIO_SetBitsGPIOD,GPIO_Pin_5)
+#define SetHeat7				;
+#define ClrHeat7			  ;
+#define SetHeat8				;
+#define ClrHeat8			  ;
 //  SPI ADC  PA2--PA7
 //#define 
 	///////////////////ADS8328宏定义///////////////////////////

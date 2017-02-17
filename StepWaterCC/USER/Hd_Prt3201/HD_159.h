@@ -110,17 +110,22 @@
 
 
 //PD0--PD5	加热控制
-/*
-#define Swon_JSP1				GPIO_SetBits(GPIOC,GPIO_Pin_6)
-#define Swoff_JSP1			GPIO_ResetBits(GPIOC,GPIO_Pin_6)
-#define Swon_JSP2				GPIO_SetBits(GPIOC,GPIO_Pin_7)
-#define Swoff_JSP2			GPIO_ResetBits(GPIOC,GPIO_Pin_7)
-#define Swon_JSP3				GPIO_SetBits(GPIOC,GPIO_Pin_8)
-#define Swoff_JSP3			GPIO_ResetBits(GPIOC,GPIO_Pin_8)
-#define Swon_JSP4				GPIO_SetBits(GPIOC,GPIO_Pin_9)
-#define Swoff_JSP4			GPIO_ResetBits(GPIOC,GPIO_Pin_9)
-*/
-
+#define SetHeat1				GPIO_ResetBits(GPIOD,GPIO_Pin_0)
+#define ClrHeat1			  GPIO_SetBits(GPIOD,GPIO_Pin_0)
+#define SetHeat2				GPIO_ResetBits(GPIOD,GPIO_Pin_1)
+#define ClrHeat2			  GPIO_SetBits(GPIOD,GPIO_Pin_1)
+#define SetHeat3				GPIO_ResetBits(GPIOD,GPIO_Pin_2)
+#define ClrHeat3			  GPIO_SetBits(GPIOD,GPIO_Pin_2)
+#define SetHeat4				GPIO_ResetBits(GPIOD,GPIO_Pin_3)
+#define ClrHeat4			  GPIO_SetBits(GPIOD,GPIO_Pin_3)
+#define SetHeat5				GPIO_ResetBits(GPIOD,GPIO_Pin_4)
+#define ClrHeat5			  GPIO_SetBits(GPIOD,GPIO_Pin_4)
+#define SetHeat6				GPIO_ResetBits(GPIOD,GPIO_Pin_5)
+#define ClrHeat6			  GPIO_SetBits(GPIOD,GPIO_Pin_5)
+#define SetHeat7				;
+#define ClrHeat7			  ;
+#define SetHeat8				;
+#define ClrHeat8			  ;
 //  SPI ADC  PA2--PA7
 //#define 
 	///////////////////ADS8328宏定义///////////////////////////

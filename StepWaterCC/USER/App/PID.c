@@ -86,13 +86,13 @@ void PID_BufInit(PidBufStruct *pidch)
 * Called by:   CtrlTemp
 * Others:
 *********************************************************/
-void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint)
+void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error)
 {
-    float dError,Error;
+    float dError;
     
     float total;
     
-    Error            =    pidch->SetPoint   -   NowPoint   ;              //计算偏差  e0
+    //Error            =    pidch->SetPoint   -   NowPoint   ;              //计算偏差  e0
     pidch->SumError  +=   Error;                      							//积分累加  e0++
     dError           =    pidch->LastError  -  pidch->PreError;     		//当前微分  e1-e2
     

@@ -2,7 +2,7 @@
 #include "includes.h"
 #include "PID.h"
 
-
+//电加热控制
 const float PID_Default[5][3]=
 {
 2.0  , 0.05  ,0.1	,    //p1  i1  d1
