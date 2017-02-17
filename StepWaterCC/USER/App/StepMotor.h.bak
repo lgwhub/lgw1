@@ -7,6 +7,11 @@
 #define MOTOR_STATUS_OFF				0
 #define MOTOR_STATUS_FORWORD		1
 #define MOTOR_STATUS_BACKWORD		2
+
+//2400在8分频时是300步步进电机的极限行程
+#define MOTOR_MAX_STEP   2400
+
+
 //步进电机
 struct step_motor{
 signed  int Position16;   //步进电机脉冲表示绝对位置，带符号

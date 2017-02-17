@@ -1,4 +1,13 @@
-//StepMotor.c
+/**
+  ******************************************************************************
+  * @file    StepMotor.c
+  * @author  Liguowei  厉国伟
+  * @version V0.0.1
+  * @date    2/15/2017
+  * @brief   This is Steper Motor Driver functions.
+  ******************************************************************************
+*/
+
 #include "includes.h"
 
 struct step_motor StepMot1;
@@ -19,69 +28,69 @@ void StepMotInit(void)
 //步进电机脉冲输出初始化
 
 StepMot1.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN1;
-Disable_CW1;
+ClrBitEN1;
+ClrBitCW1;
 StepMot1.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot1.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot1.PulseCount=0;
 StepMot1.Enable=0;
 StepMot1.ClkStatus=0;
-Disable_CLK1;
+ClrBitCLK1;
 StepMot1.Direction=MOTOR_STATUS_OFF;  //方向
 /////////////////////////
 StepMot2.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN2;
-Disable_CW2;
+ClrBitEN2;
+ClrBitCW2;
 StepMot2.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot2.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot2.PulseCount=0;
 StepMot2.Enable=0;
 StepMot2.ClkStatus=0;
-Disable_CLK2;
+ClrBitCLK2;
 StepMot2.Direction=MOTOR_STATUS_OFF;  //方向
 /////////////////////////
 StepMot3.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN3;
-Disable_CW3;
+ClrBitEN3;
+ClrBitCW3;
 StepMot3.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot3.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot3.PulseCount=0;
 StepMot3.Enable=0;
 StepMot3.ClkStatus=0;
-Disable_CLK3;
+ClrBitCLK3;
 StepMot3.Direction=MOTOR_STATUS_OFF;  //方向
 /////////////////////////
 StepMot4.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN4;
-Disable_CW4;
+ClrBitEN4;
+ClrBitCW4;
 StepMot4.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot4.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot4.PulseCount=0;
 StepMot4.Enable=0;
 StepMot4.ClkStatus=0;
-Disable_CLK4;
+ClrBitCLK4;
 StepMot4.Direction=MOTOR_STATUS_OFF;  //方向
 /////////////////////////
 StepMot5.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN5;
-Disable_CW5;
+ClrBitEN5;
+ClrBitCW5;
 StepMot5.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot5.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot5.PulseCount=0;
 StepMot5.Enable=0;
 StepMot5.ClkStatus=0;
-Disable_CLK5;
+ClrBitCLK5;
 StepMot5.Direction=MOTOR_STATUS_OFF;  //方向
 /////////////////////////
 StepMot6.Position16=0;  //步进电机脉冲表示绝对位置，带符号
-Disable_EN6;
-Disable_CW6;
+ClrBitEN6;
+ClrBitCW6;
 StepMot6.PulseCircleSet=20;//20;		//20*50us  = 0.001s
 StepMot6.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 StepMot6.PulseCount=0;
 StepMot6.Enable=0;
 StepMot6.ClkStatus=0;
-Disable_CLK6;
+ClrBitCLK6;
 StepMot6.Direction=MOTOR_STATUS_OFF;  //方向
 
 
@@ -106,11 +115,11 @@ void StepMoterPulseHandler(void)
 						if(StepMot1.ClkStatus==0)
 							{
 								StepMot1.ClkStatus=1;
-								Enable_CLK1;
+								SetBitCLK1;
 							}
 						else{
 								StepMot1.ClkStatus=0;
-								Disable_CLK1;
+								ClrBitCLK1;
 								StepMot1.PulseCount--;
 								
 								if(StepMot1.Direction==MOTOR_STATUS_FORWORD)		//前
@@ -140,12 +149,12 @@ void StepMoterPulseHandler(void)
 										if(StepMot2.ClkStatus==0)
 											{
 												StepMot2.ClkStatus=1;
-												Enable_CLK2;
+												SetBitCLK2;
 												//Led_Status_On;
 											}
 										else{
 												StepMot2.ClkStatus=0;
-												Disable_CLK2;
+												ClrBitCLK2;
 												//Led_Status_Off;
 												StepMot2.PulseCount--;
 												if(StepMot2.Direction==MOTOR_STATUS_FORWORD)		//前  //方向
@@ -173,12 +182,12 @@ void StepMoterPulseHandler(void)
 										if(StepMot3.ClkStatus==0)
 											{
 												StepMot3.ClkStatus=1;
-												Enable_CLK3;
+												SetBitCLK3;
 												//Led_Status_On;
 											}
 										else{
 												StepMot3.ClkStatus=0;
-												Disable_CLK3;
+												ClrBitCLK3;
 												//Led_Status_Off;
 												StepMot3.PulseCount--;
 												if(StepMot3.Direction==MOTOR_STATUS_FORWORD)		//前  //方向
@@ -206,12 +215,12 @@ void StepMoterPulseHandler(void)
 										if(StepMot4.ClkStatus==0)
 											{
 												StepMot4.ClkStatus=1;
-												Enable_CLK4;
+												SetBitCLK4;
 												//Led_Status_On;
 											}
 										else{
 												StepMot4.ClkStatus=0;
-												Disable_CLK4;
+												ClrBitCLK4;
 												//Led_Status_Off;
 												StepMot4.PulseCount--;
 												if(StepMot4.Direction==MOTOR_STATUS_FORWORD)		//前  //方向
@@ -239,12 +248,12 @@ void StepMoterPulseHandler(void)
 										if(StepMot5.ClkStatus==0)
 											{
 												StepMot5.ClkStatus=1;
-												Enable_CLK5;
+												SetBitCLK5;
 												//Led_Status_On;
 											}
 										else{
 												StepMot5.ClkStatus=0;
-												Disable_CLK5;
+												ClrBitCLK5;
 												//Led_Status_Off;
 												StepMot5.PulseCount--;
 												if(StepMot5.Direction==MOTOR_STATUS_FORWORD)		//前  //方向
@@ -272,12 +281,12 @@ void StepMoterPulseHandler(void)
 										if(StepMot6.ClkStatus==0)
 											{
 												StepMot6.ClkStatus=1;
-												Enable_CLK6;
+												SetBitCLK6;
 												//Led_Status_On;
 											}
 										else{
 												StepMot6.ClkStatus=0;
-												Disable_CLK6;
+												ClrBitCLK6;
 												//Led_Status_Off;
 												StepMot6.PulseCount--;
 												if(StepMot6.Direction==MOTOR_STATUS_FORWORD)		//前  //方向
@@ -300,15 +309,15 @@ void StepMoterPulseHandler(void)
 void StepMotStop1(void)
 {
 
-Disable_EN1;
-Disable_CW1;
+ClrBitEN1;
+ClrBitCW1;
 
 StepMot1.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 
 StepMot1.PulseCount=0;
 StepMot1.Enable=0;
 StepMot1.ClkStatus=0;
-Disable_CLK1;
+ClrBitCLK1;
 
 StepMot1.Direction=MOTOR_STATUS_OFF;  //方向
 }
@@ -317,15 +326,15 @@ StepMot1.Direction=MOTOR_STATUS_OFF;  //方向
 //关步进电机2#
 void StepMotStop2(void)
 {
-Disable_EN2;
-Disable_CW2;
+ClrBitEN2;
+ClrBitCW2;
 
 StepMot2.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 
 StepMot2.PulseCount=0;
 StepMot2.Enable=0;
 StepMot2.ClkStatus=0;
-Disable_CLK2;
+ClrBitCLK2;
 
 StepMot2.Direction=MOTOR_STATUS_OFF;  //方向
 }
@@ -342,19 +351,19 @@ void StepMotRun1(signed int step_count)
 	unsigned  int  step16;
 	
 StepMot1.Enable=0;
-Disable_EN1;
-Disable_CLK1;
+//-- ClrBitEN1;
+ClrBitCLK1;
 
 
 	if(step_count>0)//cw==MOTOR_STATUS_FORWORD)		//前
 		{
 			StepMot1.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW1;
+		ClrBitCW1;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot1.Direction=MOTOR_STATUS_BACKWORD;
-			Enable_CW1;
+			SetBitCW1;
 			step16=(unsigned int)(-step_count);
 			}
 			
@@ -365,7 +374,7 @@ StepMot1.PulseCircleCount=0;//StepMot1.PulseCircleSet;
 
 StepMot1.PulseCount=step16;
 StepMot1.ClkStatus=0;
-Enable_EN1;
+SetBitEN1;
 
 //OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒
 
@@ -380,24 +389,24 @@ void StepMotRun2(signed int step_count)
 {
 unsigned int  step16;
 StepMot2.Enable=0;
-Disable_EN2;
-Disable_CLK2;
+//-- ClrBitEN2;
+ClrBitCLK2;
 	if(step_count>0)		//前
 		{
 			StepMot2.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW2;
+		ClrBitCW2;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot2.Direction=MOTOR_STATUS_BACKWORD;  //方向
-			Enable_CW2;
+			SetBitCW2;
 			step16=(unsigned int)(-step_count);	
 			}
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot2.PulseCircleCount=0;//StepMot2.PulseCircleSet;
 StepMot2.PulseCount=step16;
 StepMot2.ClkStatus=0;
-Enable_EN2;
+SetBitEN2;
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot2.Enable=1;
 }
@@ -410,24 +419,24 @@ void StepMotRun3(signed int step_count)
 {
 unsigned int  step16;
 StepMot3.Enable=0;
-Disable_EN3;
-Disable_CLK3;
+//-- ClrBitEN3;
+ClrBitCLK3;
 	if(step_count>0)		//前
 		{
 			StepMot3.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW3;
+		ClrBitCW3;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot3.Direction=MOTOR_STATUS_BACKWORD;  //方向
-			Enable_CW3;
+			SetBitCW3;
 			step16=(unsigned int)(-step_count);	
 			}
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot3.PulseCircleCount=0;//StepMot3.PulseCircleSet;
 StepMot3.PulseCount=step16;
 StepMot3.ClkStatus=0;
-Enable_EN3;
+SetBitEN3;
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot3.Enable=1;
 }
@@ -441,24 +450,24 @@ void StepMotRun4(signed int step_count)
 {
 unsigned int  step16;
 StepMot4.Enable=0;
-Disable_EN4;
-Disable_CLK4;
+//-- ClrBitEN4;
+ClrBitCLK4;
 	if(step_count>0)		//前
 		{
 			StepMot4.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW4;
+		ClrBitCW4;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot4.Direction=MOTOR_STATUS_BACKWORD;  //方向
-			Enable_CW4;
+			SetBitCW4;
 			step16=(unsigned int)(-step_count);	
 			}
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot4.PulseCircleCount=0;//StepMot4.PulseCircleSet;
 StepMot4.PulseCount=step16;
 StepMot4.ClkStatus=0;
-Enable_EN4;
+SetBitEN4;
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot4.Enable=1;
 }
@@ -471,24 +480,24 @@ void StepMotRun5(signed int step_count)
 {
 unsigned int  step16;
 StepMot5.Enable=0;
-Disable_EN5;
-Disable_CLK5;
+//-- ClrBitEN5;
+ClrBitCLK5;
 	if(step_count>0)		//前
 		{
 			StepMot5.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW5;
+		ClrBitCW5;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot5.Direction=MOTOR_STATUS_BACKWORD;  //方向
-			Enable_CW5;
+			SetBitCW5;
 			step16=(unsigned int)(-step_count);	
 			}
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot5.PulseCircleCount=0;//StepMot5.PulseCircleSet;
 StepMot5.PulseCount=step16;
 StepMot5.ClkStatus=0;
-Enable_EN5;
+SetBitEN5;
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot5.Enable=1;
 }
@@ -501,24 +510,24 @@ void StepMotRun6(signed int step_count)
 {
 unsigned int  step16;
 StepMot6.Enable=0;
-Disable_EN6;
-Disable_CLK6;
+//-- ClrBitEN6;
+ClrBitCLK6;
 	if(step_count>0)		//前
 		{
 			StepMot6.Direction=MOTOR_STATUS_FORWORD;  //方向
-		Disable_CW6;
+		ClrBitCW6;
 		step16=(unsigned int)step_count;
 		}
 	else{
 		StepMot6.Direction=MOTOR_STATUS_BACKWORD;  //方向
-			Enable_CW6;
+			SetBitCW6;
 			step16=(unsigned int)(-step_count);	
 			}
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot6.PulseCircleCount=0;//StepMot6.PulseCircleSet;
 StepMot6.PulseCount=step16;
 StepMot6.ClkStatus=0;
-Enable_EN6;
+SetBitEN6;
 //OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.05秒
 StepMot6.Enable=1;
 }
@@ -548,12 +557,12 @@ StepMot6.Enable=1;
 //	if(cw==MOTOR_STATUS_FORWORD)		//前
 //		{
 //
-//		Disable_CW1;
+//		ClrBitCW1;
 //		
 //		}
 //	else if(cw==MOTOR_STATUS_BACKWORD)		//
 //			{
-//			Enable_CW1;
+//			SetBitCW1;
 //				
 //			}
 //	
@@ -566,12 +575,12 @@ StepMot6.Enable=1;
 //	if(cw==MOTOR_STATUS_FORWORD)		//前
 //		{
 //
-//		Disable_CW2;
+//		ClrBitCW2;
 //		
 //		}
 //	else if(cw==MOTOR_STATUS_BACKWORD)		//
 //		   {
-//			Enable_CW2;
+//			SetBitCW2;
 //				
 //			}
 //}
@@ -580,16 +589,16 @@ StepMot6.Enable=1;
 //void StepMotStart1(uchar cw,uint32 step_count)
 //{
 //StepMot1.Enable=0;
-//Disable_EN1;
-//Disable_CLK1;
+//ClrBitEN1;
+//ClrBitCLK1;
 //
 //StepMot1.Direction=cw;  //方向
 //	if(cw==MOTOR_STATUS_FORWORD)		//前
 //		{
-//		Disable_CW1;
+//		ClrBitCW1;
 //		}
 //	else{
-//			Enable_CW1;
+//			SetBitCW1;
 //			}
 //			
 //OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒
@@ -598,7 +607,7 @@ StepMot6.Enable=1;
 //
 //StepMot1.PulseCount=step_count;
 //StepMot1.ClkStatus=0;
-//Enable_EN1;
+//SetBitEN1;
 //
 //OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒
 //
@@ -609,16 +618,16 @@ StepMot6.Enable=1;
 //void StepMotStart2(uchar cw,uint32 step_count)
 //{
 //StepMot2.Enable=0;
-//Disable_EN2;
-//Disable_CLK2;
+//ClrBitEN2;
+//ClrBitCLK2;
 //
 //StepMot2.Direction=cw;  //方向
 //	if(cw==MOTOR_STATUS_FORWORD)		//前
 //		{
-//		Disable_CW2;
+//		ClrBitCW2;
 //		}
 //	else{
-//			Enable_CW2;
+//			SetBitCW2;
 //			}
 //			
 //OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒
@@ -627,7 +636,7 @@ StepMot6.Enable=1;
 //
 //StepMot2.PulseCount=step_count;
 //StepMot2.ClkStatus=0;
-//Enable_EN2;
+//SetBitEN2;
 //
 //OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒
 //

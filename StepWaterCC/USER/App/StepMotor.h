@@ -1,5 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    StepMotor.h
+  * @author  Liguowei  À÷¹úÎ°
+  * @version V0.0.1
+  * @date    2/15/2017
+  * @brief   This is Steper Motor Driver functions.
+  ******************************************************************************
+*/
 
-//#include <StepMotor.h>
+
 #ifndef _STEP_MOTOR_H
 #define _STEP_MOTOR_H
 

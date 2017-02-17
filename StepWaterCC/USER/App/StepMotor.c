@@ -1,4 +1,13 @@
-//StepMotor.c
+/**
+  ******************************************************************************
+  * @file    StepMotor.c
+  * @author  Liguowei  À÷¹úÎ°
+  * @version V0.0.1
+  * @date    2/15/2017
+  * @brief   This is Steper Motor Driver functions.
+  ******************************************************************************
+*/
+
 #include "includes.h"
 
 struct step_motor StepMot1;
