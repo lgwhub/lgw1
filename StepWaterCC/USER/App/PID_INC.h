@@ -3,8 +3,13 @@
 
 
 //水冷  增量控制
-#define MAX_PID_INTEGRAL_1   100
-#define MIN_PID_INTEGRAL_1   (-100)
+//#define MAX_PID_INTEGRAL_1   100
+//#define MIN_PID_INTEGRAL_1   (-100)
+
+//2400在8分频时是300步步进电机的极限行程   MOTOR_MAX_STEP == 2400
+#define MAX_PID_INTEGRAL_1   (MOTOR_MAX_STEP/24)
+#define MIN_PID_INTEGRAL_1   (-MAX_PID_INTEGRAL_1)
+
 
 extern PidBufStruct StepPidBuf[MAX_TEMPRATURE_CHNALL];
 /********************************************************

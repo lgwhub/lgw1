@@ -70,5 +70,7 @@ void PID_ParaInit(void);//PID_ParaStruct *types,float p, float i, float d);
 
 //void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
 void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error);
+
+void PID_Para_Refush_All(void);
 #endif
 

@@ -343,7 +343,7 @@ void _ModbusParameterProcess(unsigned char Channl,unsigned char *p,unsigned shor
 		  ModbusCommand1();  //收到参数时执行一下
 		  
 		  ModbusCommand2();
-		  
+		  PID_Para_Refush_All();
 		  TimeForSaveParam = 10;//秒
 		  break;	
 		  		  	

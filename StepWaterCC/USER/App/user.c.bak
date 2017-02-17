@@ -19,6 +19,12 @@ OS_EVENT *OSSemTimePid_Heat;
 uchar LenFromUser;	
 uchar BufFromUser[252];
 
+//2400步在8分频时是300步步进电机的极限行程，开阀门
+//如果温度太高，超过设定值15度，则不用PID,直接打开240步，最多后退打开冷水次数为10+2次
+#define   STEPER_MOTOR_MAX_COUNT_OPEN     10
+//如果温度太低，低于设定值15度，则不用PID,直接关闭32步，最多前进关闭冷水次数为75+15次
+#define   STEPER_MOTOR_MAX_COUNT_CLOSE    75
+//这样就不会一直在极限处动作了
 
 unsigned char lAddressKey;  //拨码开关PB12-PB15，值，最低4位
 
@@ -566,7 +572,7 @@ for(;;)
           //PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint)
           
           HeatPidBuf[i].SetPoint = Coldw.T_set; //基本上多余
-			    PID_Calc(PidParam, &HeatPidBuf[i], ( wAdcResoult [ i ] - HeatPidBuf[i].SetPoint )); //一般是error = SetPoint - NewPoint ,这里反过来
+			    PID_Calc(PidParam, &HeatPidBuf[i], ( HeatPidBuf[i].SetPoint - wAdcResoult [ i ] )); //一般是error = SetPoint - NewPoint ,这里反过来
 			    Coldw.TC_duty[i] = (unsigned short int)HeatPidBuf[i].Qx;
 			    //输出
 			    
@@ -1168,31 +1174,34 @@ for(;;)
 				    if( ( wAdcResoult [ i ] -  Coldw.T_set ) > 15  )
 				    	  {//超
 				    		
-				    		if( Coldw.Counter_MaxOpen[i] < 12 )				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
-				    				{//打开 12 x 205步  2460
-				    					
-                     //后退200/2400步，2400步在8分频时是300步步进电机的极限行程，开阀门
-	                   //StepMotRun1(-200);//MOTOR_BACK_STEP);	
+				    		if( Coldw.Counter_MaxOpen[i] < ( STEPER_MOTOR_MAX_COUNT_OPEN + 2 ))				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
+				    				{//打开 (10 + 2 )x 240步  = 2880
+				             //后退200/2400步，2400步在8分频时是300步步进电机的极限行程，开阀门
 	                   OSSemPend(OSSemMotors,0,&err);	
-	                   MotorsRun(i,-205);//后退205步
+	                   //MotorsRun(i,-205);//后退205步
+	                   MotorsRun(i, - ( MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_OPEN  ) );//后退240步
                      OSSemPost(OSSemMotors);			    					
 				    					
-				    					Coldw.Counter_MaxOpen[i]++;
+				    				Coldw.Counter_MaxOpen[i]++;
 				    				}
+				    				
+				    		Coldw.Counter_MaxClose[i]  =  0;
+				    		
 				    	  }
 						else if( ( Coldw.T_set -  wAdcResoult [ i ] ) > 15  )
 							{//太低
-								if( Coldw.Counter_MaxClose[i]	< 123 )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
-										{//关闭 123 x 20步 2460
+								if( Coldw.Counter_MaxClose[i]	< (STEPER_MOTOR_MAX_COUNT_CLOSE+15) )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
+										{//关闭 (75+15) x 32步 2880
 										//前进2400步，在8分频时是300步步进电机的极限行程，前进到极限，关闭阀门	
-	                   //StepMotRun1( 2400);//MOTOR_FORWORD_STEP);//MOTOR_TEST_STEP);
-	                   
+
 	                  OSSemPend(OSSemMotors,0,&err);	
-										MotorsRun(i,20);
+										MotorsRun(i,MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_CLOSE );
 										OSSemPost(OSSemMotors);
 										
 							      Coldw.Counter_MaxClose[i]++;
 									  }
+								
+								Coldw.Counter_MaxOpen[i]   =  0;	  
 							}
 						else{//正常范围，需要PID控制	
 									//超范围计数器清零

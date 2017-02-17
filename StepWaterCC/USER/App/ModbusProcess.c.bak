@@ -340,9 +340,9 @@ void _ModbusParameterProcess(unsigned char Channl,unsigned char *p,unsigned shor
 		  case MODBUS_WRITE_REGISTER:  //写寄存器0x10
 		  
 		  ModbusWriteWord(Channl,p,len,ResponeBuf);
-		  ModbusCommand();  //收到参数时执行一下
+		  ModbusCommand1();  //收到参数时执行一下
 		  
-		  
+		  ModbusCommand2();
 		  
 		  TimeForSaveParam = 10;//秒
 		  break;	

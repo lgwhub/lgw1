@@ -76,7 +76,7 @@
 ### ADS-LD Output File: '.\Obj\StepWaterCC.axf'
 ### ADS-LD Command File: '.\Obj\StepWaterCC.lnp'
 ### Checking for dirty Components...
-### Creating CmdFile '.\Obj\StepWaterCC.lnp', Handle=0x000004D0
+### Creating CmdFile '.\Obj\StepWaterCC.lnp', Handle=0x000004A0
 ### Writing '.lnp' file
 ### ADS-LD Command file '.\Obj\StepWaterCC.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.

@@ -56,9 +56,8 @@ extern PidBufStruct StepPidBuf[MAX_TEMPRATURE_CHNALL];
 *********************************************************/
 //float
 
-void PID_Inc_BufInit(PidBufStruct *pidch);
-void PID_Inc_ParaInit(PID_ParaStruct *types,float p, float i, float d);
-
+//void PID_Inc_BufInit(PidBufStruct *pidch);
 void PID_Inc_ParaInit(void);
+void PID_Inc_Calc( PidBufStruct *ch, float Error);
 #endif
 

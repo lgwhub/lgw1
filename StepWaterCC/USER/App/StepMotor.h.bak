@@ -39,6 +39,10 @@ void StepMoterPulseHandler(void);
 //2400在8分频时是300步步进电机的极限行程
 void StepMotRun1(signed int step_count);
 void StepMotRun2(signed int step_count);
+void StepMotRun3(signed int step_count);
+void StepMotRun4(signed int step_count);
+void StepMotRun5(signed int step_count);
+void StepMotRun6(signed int step_count);
 
 void StepMotStop1(void);
 void StepMotStop2(void);
