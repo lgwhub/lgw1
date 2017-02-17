@@ -1,0 +1,14 @@
+//#include "config.h"
+
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+
+//遥控器序列号在EEPROM 0X0C~0X0F处    0X0D 0X0E 0X0F 忽律0X0c
+#define EEPROM_NAME_ADR			0X0C
+
+
+
+#endif
+
+

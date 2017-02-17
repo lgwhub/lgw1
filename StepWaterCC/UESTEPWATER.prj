@@ -1,0 +1,90 @@
+[Files - param_modbus]
+0=USER\App\ModbusRecv.h
+1=USER\App\ModbusProcess.h
+2=USER\App\AT24C1024.H
+3=USER\App\Parameter.h
+4=USER\App\ModbusProcess.c
+5=USER\App\Parameter.c
+6=USER\App\AT24C1024.C
+7=USER\App\ModbusRecv.c
+[Files - user]
+0=USER\uart.h
+1=USER\LoopBuf.c
+2=USER\LoopBuf.h
+3=USER\main.c
+4=USER\NOMAL.c
+5=USER\NOMAL.H
+6=USER\stm32f10x_conf.h
+7=USER\stm32f10x_it.c
+8=USER\stm32f10x_it.h
+9=USER\system_stm32f10x.c
+10=USER\uart.c
+11=USER\config.h
+12=USER\Test.H
+13=USER\Test.c
+14=USER\App\user.c
+15=USER\App\user.h
+16=USER\App\Soft.c
+17=ADC\adc.h
+18=ADC\adc.c
+19=USER\ADS8328.c
+20=USER\ADS8328.h
+21=USER\App\StepMotor.c
+22=USER\App\StepMotor.h
+23=USER\App\PID_INC.C
+24=USER\App\PID.h
+25=USER\App\PID_INC.h
+26=USER\App\PID.c
+27=USER\App\jump.c
+28=USER\App\jump.h
+29=USER\Hd_Prt3201\HD_159.h
+30=USER\Hd_Prt3201\HD_159.c
+[Open Files]
+Active File Display Mode=3
+Active File Index=3
+Open File Line0=7313
+Open File Line1=2643
+Open File Line2=4287
+Open File Line3=22583
+Open File Pos0=7698
+Open File Pos1=2643
+Open File Pos2=4436
+Open File Pos3=22398
+Open File Window Pos0=0,1,-1,-1,-4,-30,66,87,1031,443
+Open File Window Pos1=0,1,-1,-1,-4,-30,0,0,1423,358
+Open File Window Pos2=0,1,-1,-1,-4,-30,22,29,1445,387
+Open File Window Pos3=2,3,-1,-1,-4,-30,44,58,1467,416
+Open File0=.\USER\HD_PRT3201\HD_159.c
+Open File1=.\USER\APP\StepMotor.c
+Open File2=.\USER\main.c
+Open File3=.\USER\APP\user.c
+Open File4=
+[Project Information]
+Create Tagfile=0
+Filter=
+Include Sub Directories=1
+Project Start=E1070200000005000A0025003700000055
+Project Tagfile=
+Project Wordfile=
+Relative to Project File=1
+Use Relative Directory=1
+Working Time=1569207
+[Group]
+0=ucos
+1=user
+2=lib
+3=param_modbus
+[Files - ucos]
+0=USER\App\uctsk_OSView.c
+1=USER\App\app_cfg.h
+2=USER\App\includes.h
+3=USER\App\os_cfg.h
+4=USER\uCOS-VIEW\Ports\ARM-Cortex-M3\Realview\os_viewc.h
+[Folders]
+param_modbus=1
+ucos=1
+user=1
+[Files - lib]
+0=Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+[Project ID]
+Signature=UE Proj: v.1
