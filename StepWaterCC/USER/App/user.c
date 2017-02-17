@@ -23,7 +23,7 @@ uchar BufFromUser[252];
 //如果温度太高，超过设定值15度，则不用PID,直接打开240步，最多后退打开冷水次数为10+2次
 #define   STEPER_MOTOR_MAX_COUNT_OPEN     10
 //如果温度太低，低于设定值15度，则不用PID,直接关闭32步，最多前进关闭冷水次数为75+15次
-#define   STEPER_MOTOR_MAX_COUNT_CLOSE    75
+#define   STEPER_MOTOR_MAX_COUNT_CLOSE    30
 //这样就不会一直在极限处动作了
 
 unsigned char lAddressKey;  //拨码开关PB12-PB15，值，最低4位
@@ -532,6 +532,7 @@ void TaskTimePr(void * pdata)
 
       OSTimeDly(OS_TICKS_PER_SEC/100);	    //延时0.01秒
       timer1++;
+      
       if(timer1 >= 20)  //200ms
            {
             timer1  = 0 ;
@@ -539,7 +540,7 @@ void TaskTimePr(void * pdata)
            }
 
        timer2++;
-       if(timer2 >= 200 ) //2s
+       if(timer2 >= 50 ) //0.5s
            {
             timer2 = 0;
             OSSemPost(OSSemTimePid_StepMotor);   //水冷PID控制周期
@@ -576,13 +577,31 @@ for(;;)
 			    
 			    
 			    
-			    HeatPidBuf[0].Qx = 200 ;
+			    //HeatPidBuf[0].Qx = 200 ;
 			    
-			    Coldw.TC_duty[i] = (unsigned short int)HeatPidBuf[i].Qx;
-			    //输出
+			    
+			     switch(Coldw.unit_onof_flag[i])
+			          {
+			    	    case 1:  //电加热 和 水冷全部自动工作
+			    	    case 3:  //电加热自动工作
+			          Coldw.TC_duty[i] = (unsigned short int)HeatPidBuf[i].Qx;   //PID结果去控制电加热
+			          //输出
+			          break;
+			       
+			          case 2:   //只有水冷自动工作 电加热可以手动调整
+			          break;
+			       
+			       
+			           case 0:  //0 和 其它 值  电加热 和 水冷全部关
+			          default:  //0 和 其它 值  电加热 和 水冷全部关
+			       	  Coldw.TC_duty[i] = 0;
+			          break;
+			       	
+			          }
+			    
 			    
 			     }
-			     
+	     
 			     
     Coldw.MONI_PX2 = HeatPidBuf[0].Px;  	   
     Coldw.MONI_IX2 = HeatPidBuf[0].Ix;  	       
@@ -1173,12 +1192,29 @@ for(;;)
 
      OSSemPend(OSSemTimePid_StepMotor,0,&err);  //OSSemPost(OSSemTimePid_StepMotor);   OSSemTimePid_Heat
      
+//     			     switch---(Coldw.unit_onof_flag[i])
+//			          {
+//			    	    case 1:  //电加热 和 水冷全部自动工作
+//			    	    case 3:  //电加热自动工作
+//			          case 2:   //只有水冷自动工作 电加热可以调整
+//			          break;
+//			       
+//			       
+//			           case 0:  //0 和 其它 值  电加热 和 水冷全部关
+//			          default:  //0 和 其它 值  电加热 和 水冷全部关
+//			          break;
+//			       	
+//			          }
+     
+     
+     
      for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
-            {
+         {
 
+				 if( (Coldw.unit_onof_flag[i] == 1 ) || (Coldw.unit_onof_flag[i] == 2 ) )  //1 2 水冷自动工作
+     	       {
 				
-				
-				    if( ( wAdcResoult [ i ] -  Coldw.T_set ) > 15  )
+				     if( ( wAdcResoult [ i ] -  Coldw.T_set ) > 15  )
 				    	  {//超
 				    		
 				    		if( Coldw.Counter_MaxOpen[i] < ( STEPER_MOTOR_MAX_COUNT_OPEN + 2 ))				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
@@ -1194,10 +1230,10 @@ for(;;)
 				    		Coldw.Counter_MaxClose[i]  =  0;
 				    		
 				    	  }
-						else if( ( Coldw.T_set -  wAdcResoult [ i ] ) > 15  )
+						 else if( ( Coldw.T_set -  wAdcResoult [ i ] ) > 15  )
 							{//太低
-								if( Coldw.Counter_MaxClose[i]	< (STEPER_MOTOR_MAX_COUNT_CLOSE+15) )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
-										{//关闭 (75+15) x 32步 2880
+								if( Coldw.Counter_MaxClose[i]	< (STEPER_MOTOR_MAX_COUNT_CLOSE+5) )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
+										{//关闭 (30+5) x 80步 2880
 										//前进2400步，在8分频时是300步步进电机的极限行程，前进到极限，关闭阀门	
 
 	                  OSSemPend(OSSemMotors,0,&err);	
@@ -1209,7 +1245,7 @@ for(;;)
 								
 								Coldw.Counter_MaxOpen[i]   =  0;	  
 							}
-						else{//正常范围，需要PID控制	
+						 else{//正常范围，需要PID控制	
 									//超范围计数器清零
 									Coldw.Counter_MaxOpen[i]   =  0;				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
             			Coldw.Counter_MaxClose[i]  =  0;				//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
@@ -1225,14 +1261,13 @@ for(;;)
 							}
 					
 					  }
-					  
+				} 
 		Coldw.MONI_PX1 = StepPidBuf[0].Px;//0.11;                //
     Coldw.MONI_IX1 = StepPidBuf[0].Ix;//0.12;
     Coldw.MONI_DX1 = StepPidBuf[0].Dx;//0.13;
     Coldw.MONI_QX1 = StepPidBuf[0].Qx; //0.14;
-    
-    //Coldw.MONI_PX2 = 0.21;                //
-      OSTimeDly(OS_TICKS_PER_SEC/500);  //补充延时
+                  
+    OSTimeDly(OS_TICKS_PER_SEC/500);  //补充延时
 
 		}
 }

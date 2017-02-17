@@ -167,9 +167,9 @@ void Default_ParamInit(void)
 
 
 
-    Coldw.PID_P1 = 3;                //水冷增量PID
-    Coldw.PID_I1 = 1;//0.01;
-    Coldw.PID_D1 = 4;
+    Coldw.PID_P1 = 35;//3;                //水冷增量PID
+    Coldw.PID_I1 = 5;//1;
+    Coldw.PID_D1 = 100;//4;
     
     Coldw.PID_P2 = 1.01;                //电加热PID
     Coldw.PID_I2 = 1.02;
