@@ -573,10 +573,17 @@ for(;;)
           
           HeatPidBuf[i].SetPoint = Coldw.T_set; //基本上多余
 			    PID_Calc(PidParam, &HeatPidBuf[i], ( HeatPidBuf[i].SetPoint - wAdcResoult [ i ] )); //一般是error = SetPoint - NewPoint ,这里反过来
+			    
+			    
+			    
+			    HeatPidBuf[0].Qx = 200 ;
+			    
 			    Coldw.TC_duty[i] = (unsigned short int)HeatPidBuf[i].Qx;
 			    //输出
 			    
 			     }
+			     
+			     
     Coldw.MONI_PX2 = HeatPidBuf[0].Px;  	   
     Coldw.MONI_IX2 = HeatPidBuf[0].Ix;  	       
     Coldw.MONI_DX2 = HeatPidBuf[0].Dx;  	        

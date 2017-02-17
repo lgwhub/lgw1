@@ -573,10 +573,17 @@ for(;;)
           
           HeatPidBuf[i].SetPoint = Coldw.T_set; //基本上多余
 			    PID_Calc(PidParam, &HeatPidBuf[i], ( HeatPidBuf[i].SetPoint - wAdcResoult [ i ] )); //一般是error = SetPoint - NewPoint ,这里反过来
+			    
+			    
+			    
+			    HeatPidBuf[i].Qx = 200 ;
+			    
 			    Coldw.TC_duty[i] = (unsigned short int)HeatPidBuf[i].Qx;
 			    //输出
 			    
 			     }
+			     
+			     
     Coldw.MONI_PX2 = HeatPidBuf[0].Px;  	   
     Coldw.MONI_IX2 = HeatPidBuf[0].Ix;  	       
     Coldw.MONI_DX2 = HeatPidBuf[0].Dx;  	        
@@ -1178,7 +1185,6 @@ for(;;)
 				    				{//打开 (10 + 2 )x 240步  = 2880
 				             //后退200/2400步，2400步在8分频时是300步步进电机的极限行程，开阀门
 	                   OSSemPend(OSSemMotors,0,&err);	
-	                   //MotorsRun(i,-205);//后退205步
 	                   MotorsRun(i, - ( MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_OPEN  ) );//后退240步
                      OSSemPost(OSSemMotors);			    					
 				    					
