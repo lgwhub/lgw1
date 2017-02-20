@@ -31,3 +31,12 @@
 # Debug files
 *.dSYM/
 *.su
+
+
+*.bak
+
+/StepWaterCC/MDK-ARM
+
+/StepWaterCC/UESTEPWATER.prj
+
+.gitignore
