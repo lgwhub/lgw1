@@ -100,11 +100,11 @@ void CHECK_AD590OneTCCheckUseADS8328(unsigned int num,float data_amp,float data_
 
 
 
-	  if(temp_tt > 6029)  //有温度探头的,温度大于0度的
+	  if(temp_tt > 13185)  //有温度探头的,温度大于0度的
 	     {
-	  	  temp_tt -= 6029;
+	  	  temp_tt -= 13185;
 		    temp2 =( float) temp_tt;
-	      temp2 = temp2 / 262;
+	      temp2 = temp2 / 288;//262;
 	      temp2 += temp_TC_bias;
 	     }
 	  else  //没有温度探头
