@@ -42,9 +42,8 @@
 .\Obj\uctsk_osview.o: ..\USER\App\StepMotor.h
 .\Obj\uctsk_osview.o: ..\USER\ADS8328.h
 .\Obj\uctsk_osview.o: ..\USER\App\AT24C1024.H
+.\Obj\uctsk_osview.o: ..\USER\App\pid.h
 .\Obj\uctsk_osview.o: ..\USER\App\Parameter.h
 .\Obj\uctsk_osview.o: ..\USER\App\ModbusProcess.h
 .\Obj\uctsk_osview.o: ..\USER\App\ModbusRecv.h
-.\Obj\uctsk_osview.o: ..\USER\App\pid.h
-.\Obj\uctsk_osview.o: ..\USER\App\PID_INC.h
 .\Obj\uctsk_osview.o: ..\USER\App\jump.h

@@ -42,9 +42,8 @@
 .\Obj\parameter.o: ..\USER\App\StepMotor.h
 .\Obj\parameter.o: ..\USER\ADS8328.h
 .\Obj\parameter.o: ..\USER\App\AT24C1024.H
+.\Obj\parameter.o: ..\USER\App\pid.h
 .\Obj\parameter.o: ..\USER\App\Parameter.h
 .\Obj\parameter.o: ..\USER\App\ModbusProcess.h
 .\Obj\parameter.o: ..\USER\App\ModbusRecv.h
-.\Obj\parameter.o: ..\USER\App\pid.h
-.\Obj\parameter.o: ..\USER\App\PID_INC.h
 .\Obj\parameter.o: ..\USER\App\jump.h

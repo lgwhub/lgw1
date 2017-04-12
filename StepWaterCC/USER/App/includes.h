@@ -65,11 +65,12 @@
 	
 #include "ADS8328.h"
 #include "AT24C1024.H"
+#include "pid.h"
 #include "Parameter.h"
 #include "ModbusProcess.h"
 #include "ModbusRecv.h"
-#include "pid.h"
-#include "PID_INC.h"
+
+//#include "PID_INC.h"
 
 #include "jump.h"
 

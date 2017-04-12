@@ -3,63 +3,49 @@
 #include "PID.h"
 
 //电加热控制
-const float PID_Default[5][3]=
-{
-150  ,     2,       12,	
-//5.0  , 0.2  ,0.6	,    //p1  i1  d1
-//2.0  , 0.05  ,0.1	,    //p2  i2  d2
-//2.0  , 0.05  ,0.1	,
-//2.0  , 0.05  ,0.1		
-};
+//const float PID_Default[5][3]=
+//{
+//150  ,     2,       12,	
+////5.0  , 0.2  ,0.6	,    //p1  i1  d1
+////2.0  , 0.05  ,0.1	,    //p2  i2  d2
+////2.0  , 0.05  ,0.1	,
+////2.0  , 0.05  ,0.1		
+//};
 
 
-PID_ParaStruct      PidParam[1];
+//PID_ParaStruct      PidParam[2];
 
 PidBufStruct HeatPidBuf[MAX_TEMPRATURE_CHNALL];
+PidBufStruct StepPidBuf[MAX_TEMPRATURE_CHNALL];
 
 
 
-void PID_Para_Refush(unsigned char i)
-{
-	 PidParam[0].Proportion  =  PID_Default[0][0]  * Coldw.PID_P2;          //比例常数
-	 PidParam[0].Integral    =  PID_Default[0][1]  * Coldw.PID_I2;          //
-	 PidParam[0].Derivative  =  PID_Default[0][2]  * Coldw.PID_D2;
-	
-		if( PidParam[0].Integral == 0 )
-			{
-		    PidParam[0].MaxSumError =  0;
-            PidParam[0].MinSumError =  0;
-		  }
-		else{
-        PidParam[0].MaxSumError =  MAX_PID_INTEGRAL_2/(PidParam[0].Integral);
-        PidParam[0].MinSumError =  0;// (-(PWM_PERIOD_PULSE)) /(types->Integral);
-        }	
 
-}
-/////////////////////
-void PID_Para_Refush_All(void)
-{
-unsigned char i;
-	for( i = 0 ; i<1 ; i++)
-	    {
-      PID_Para_Refush(i);
-      }
-}
 //////////////////////////
 
 void PID_ParaInit(void)
 {
 
-//	 gParamBlk.sPidRate[i].Proportion=1;          //比例常数
-//	 gParamBlk.sPidRate[i].Integral=1;          //
-//	 gParamBlk.sPidRate[i].Derivative
-//	 Coldw.PID_P2=1;          //比例常数
-//	 Coldw.PID_I2=1;
-//	 Coldw.PID_D2=1;
 
- 
-	PID_Para_Refush_All();	    	
+		//水冷
+	 Coldw.Pidx[0].Proportion  =    5;//25;//20;//6;//2;          //比例常数
+	 Coldw.Pidx[0].Integral    =    0.3;//0.2;//0.5;//;0.2;//0.025;          //
+	 Coldw.Pidx[0].Derivative  =    55;//50;//2;//1;
+	 Coldw.Pidx[0].QMax        =    MAX_PID_INTEGRAL_1;
+   Coldw.Pidx[0].QMin        =    MIN_PID_INTEGRAL_1;  
+		
+		
+		//电加热
+	 Coldw.Pidx[1].Proportion  =   60;//150;          //比例常数
+	 Coldw.Pidx[1].Integral    =   2;          //
+	 Coldw.Pidx[1].Derivative  =   12;
+	 Coldw.Pidx[1]. QMax       =   MAX_PID_INTEGRAL_2;
+   Coldw.Pidx[1]. QMin       =   MIN_PID_INTEGRAL_2;  
+
+
 }
+
+
 
 
 void PID_BufInit(PidBufStruct *pidch)
@@ -86,11 +72,53 @@ void PID_BufInit(PidBufStruct *pidch)
 * Called by:   CtrlTemp
 * Others:
 *********************************************************/
-void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error)
+void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error ,unsigned char typeflag)
 {
     float dError;
     
-    float total;
+    float total,temp;
+    
+//////////////////////////////////////////////////////        
+    float PidRate;
+    
+    PidRate = 0;
+//////////////////////////////////////////////////////    
+ if( typeflag == 1)
+ 	{
+    if( Error>0 )
+    	{
+    		if(  ( pidch->LastError >0 ) && ( pidch->LastError >0 )   )
+    			{
+    				if( Error > 3 )  //误差3度
+    					{
+    						 PidRate = 2;
+    					}
+    				else{
+    					    PidRate = 0;
+    				    }	
+     			}
+    	}
+ //////////////////////////////
+     if( Error<0 )
+    	{
+    		if(  ( pidch->LastError <0 ) && ( pidch->LastError <0 )   )
+    			{
+    				if( Error < (-3 ))
+    					{
+    						 PidRate = 2;
+    					}
+    				else{
+    					    PidRate = 0;
+    				    }	
+     			}
+    	}   
+    }
+  else{
+  	PidRate = 0;
+     }	
+
+   if( PidRate >5 )PidRate = 5;
+    
     
     //Error            =    pidch->SetPoint   -   NowPoint   ;              //计算偏差  e0
     pidch->SumError  +=   Error;                      							//积分累加  e0++
@@ -105,20 +133,38 @@ void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error)
     //////////抗饱和////////////////////////////////////////////////////MAX_PID_INTEGRAL
 
 		    
-    if( pidch->SumError   >  types->MaxSumError )
-		    {
-		     pidch->SumError  =  types->MaxSumError;
-		    }
-    else if(  pidch->SumError  <  types->MinSumError  )
-		    {
-		      pidch->SumError      =  types->MinSumError;
-		    }		    
+   
+		    
+		    
+		    
+			if( types->Integral == 0 )
+			{
+		    pidch->SumError =  0;
+
+		  }
+		else{
+
+        
+        temp =      types->Integral * pidch->SumError ;
+        
+        if( ( temp ) >  types->QMax )
+		          {
+		           pidch->SumError  =  types->QMax/(types->Integral);
+		          }
+        else if( ( temp )  < types->QMin )
+		         {
+		           pidch->SumError  = types->QMin/(types->Integral);
+		         }
+	        
+        }		    
+		    
+		    
 		    
 		//////////////////////    
 
 
     
-    pidch->Px =   types->Proportion *  Error;	          //P部分
+    pidch->Px =   types->Proportion *  Error * ( 1 + PidRate)  ;	          //P部分
     pidch->Ix =   types->Integral   *  pidch->SumError;	//I部分  
     pidch->Dx =   types->Derivative *  dError;	        //D部分
    
@@ -126,12 +172,12 @@ void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error)
     total     =   pidch->Px + pidch->Ix + pidch->Dx;
 
 
-    if( total < MIN_PID_RESOULT_2 )
-    	{   pidch->Qx  =  (signed long int)MIN_PID_RESOULT_2;
+    if( total < types->QMin )
+    	{   pidch->Qx  =  (signed long int)types->QMin;
     	}
-    else if( total > MAX_PID_RESOULT_2 )
+    else if( total > types->QMax )
     	{
-    		pidch->Qx   = (signed long int)MAX_PID_RESOULT_2;
+    		pidch->Qx   = (signed long int)types->QMax;
     	}
     else {
     	    pidch->Qx   = (signed long int)total;

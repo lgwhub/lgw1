@@ -135,6 +135,7 @@ void ModbusCommand1(void)//收到参数时执行一下
           		  case CMND_RESET_21: //输入 1 ，然后 2 然后21
           			  if(TimeAutoLock3 > 0)
           			  	  {
+          			  	  Coldw.lBackupRestore +=3;	
           			  		OSTimeDly(OS_TICKS_PER_SEC*6);
           			  		SoftReset();
           			  	  }
@@ -144,7 +145,7 @@ void ModbusCommand1(void)//收到参数时执行一下
           			if(TimeAutoLock3 > 0)
           			  	  {
           			  	  	
-          			  	  	
+          			  	  Coldw.lBackupRestore +=3;		
           			  	  IspMarkWrite(CMND_ISP_22);	//Coldw.lBackupRestore);//
           			  	  
           			  	  
@@ -180,7 +181,8 @@ void ModbusCommand1(void)//收到参数时执行一下
           				{
           					//Default_ParamInit0();
           					//FlagSetAllDefault = 1;
-
+                    FlagSetAllDefault = 1;
+                    Coldw.lBackupRestore =0; 
           				}
 								break;
           	
@@ -190,7 +192,9 @@ void ModbusCommand1(void)//收到参数时执行一下
 								if(TimeAutoLock3 > 0)
           				{
           					//FlagSetAllDefault = 2;
+				 	         FlagSetAllDefault = 2;
 				 	    
+                   Coldw.lBackupRestore =0;
          
                    //Default_ParamInit1();    ////需要保存的参数
                    }
@@ -203,7 +207,7 @@ void ModbusCommand1(void)//收到参数时执行一下
           					//Default_ParamInit0();
                     //Default_ParamInit1();    ////需要保存的参数
                     //Default_ParamInit2();    ////整定值
-
+                   Coldw.lBackupRestore =0;
           				}
 								break;           	
           			}

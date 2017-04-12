@@ -45,12 +45,16 @@ typedef struct
     float               Ts8_AMP;
     float               Ts8_BIAS;
 
-    float               PID_P1;                //水冷增量PID
-    float               PID_I1;
-    float               PID_D1;
-    float               PID_P2;                //
-    float               PID_I2;
-    float               PID_D2;    
+//    float               PID_P1;                //水冷增量PID
+//    float               PID_I1;
+//    float               PID_D1;
+//    float               PID_P2;                //
+//    float               PID_I2;
+//    float               PID_D2;    
+
+PID_ParaStruct      Pidx[2];   //5X4X2 字节  pid参数
+
+
 
     float               MONI_PX1;                //
     float               MONI_IX1;
@@ -62,8 +66,9 @@ typedef struct
     float               MONI_DX2;
     unsigned long int               MONI_QX2;    
         
-    float               NC[22];               //
+    float               NC[18];               //old 22
 
+   //0x70  112x2 byte
     unsigned long  int  Burnin_type;          //老化类型
 
     float               T_set;                //温度设置值
@@ -76,14 +81,19 @@ typedef struct
     float               TC_sx;                //温度上限设置值
     
     unsigned long  int  unit_onof_flag[8];    //
-    unsigned long  int  TC_duty_set;          //占空比
-    signed long  int  FAN_duty_set;         //步进电机
+ //   unsigned long  int  TC_duty_set;          //占空比
+//    signed long  int  FAN_duty_set;         //步进电机
+    unsigned long  int  TC_duty_set[8];          //电加热占空比        设定值
+    unsigned long  int  FAN_duty_set[8];         //风机或者水冷占空比  设定值       
+    
     unsigned long  int  Moter_step_set;       //强制走几步
     unsigned long  int  Moter_direction;      //方向
     unsigned long  int  one_unit_flag;        //
     unsigned long  int  one_onoff_flag;       //
     unsigned long  int  limit_recode[8];      //
 
+
+  //  198x2 byte
     float               Ts[8];                //
 
     unsigned long  int  TC_duty[8];           //占空比
@@ -100,12 +110,17 @@ typedef struct
     unsigned long  int  lSysSwitch_reserve;          //默认开机 系统开关
     unsigned long  int 	lstats;  //统计信息  
     
+    unsigned long  int 	WorkMode;  //普通工作方式还是冷热循环方式
+    unsigned long  int 	SignalSelect;  //壳温还是结温
+    float               Tin[8];		//结温控制用
     
+    
+      //    280x2 byte   
     
   unsigned long  int   Counter_MaxOpen[8];				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
   unsigned long  int   Counter_MaxClose[8];				//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
   
-   
+    unsigned long  int   temp32[24]; 
    
 
 }  _param_water8;    //  字节
@@ -113,7 +128,13 @@ typedef struct
 extern _param_water8  Coldw;
 
 
+extern unsigned char ModBusParaByte[];   //modbus 参数 拷贝缓冲区
 
+extern unsigned char FlagSetAllDefault;
+
+void Default_ParamInit0(void);//不需要保存的参数
+void Default_ParamInit1(void); //普通参数  //需要保存的参数
+void Default_ParamInit2(void); //整定值
 
 void Default_ParamInit(void);
 void InitSaveParam(void);

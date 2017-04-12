@@ -30,7 +30,6 @@ File 1,1,<..\USER\App\user.c><user.c>
 File 1,1,<..\ADC\adc.c><adc.c>
 File 1,1,<..\USER\Test.c><Test.c>
 File 1,1,<..\USER\ADS8328.c><ADS8328.c>
-File 1,1,<..\USER\App\PID_INC.C><PID_INC.C>
 File 1,1,<..\USER\App\PID.c><PID.c>
 File 1,1,<..\USER\App\jump.c><jump.c>
 File 1,1,<..\USER\App\AT24C1024.C><AT24C1024.C>

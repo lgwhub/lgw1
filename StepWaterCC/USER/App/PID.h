@@ -2,9 +2,9 @@
 #define    _PID_INC_H
 
 
-//PWM_PERIOD_PULSE
-//#define MAX_PID_INTEGRAL_1   100
-//#define MIN_PID_INTEGRAL_1   (-100)
+//水冷
+#define MAX_PID_INTEGRAL_1   250
+#define MIN_PID_INTEGRAL_1   (-250)
 
 #define MAX_PID_INTEGRAL_2   200
 #define MIN_PID_INTEGRAL_2   (0)
@@ -20,13 +20,13 @@ typedef struct
     float Proportion;          //比例常数
     float Integral;            //积分常数
     float Derivative;          //微分常数
-    float MaxSumError;    
-    float MinSumError;    
+    float QMax;    //MAX_PID_INTEGRAL_2
+    float QMin;    
 
 }PID_ParaStruct;
 
 
-extern PID_ParaStruct      PidParam[1];
+//extern PID_ParaStruct      PidParam[2];
 
 
 typedef struct 
@@ -49,7 +49,7 @@ typedef struct
 }PidBufStruct;  //临时变量
 
 extern PidBufStruct HeatPidBuf[MAX_TEMPRATURE_CHNALL];
-
+extern PidBufStruct StepPidBuf[MAX_TEMPRATURE_CHNALL];
 
 
 /********************************************************
@@ -69,8 +69,8 @@ void PID_ParaInit(void);//PID_ParaStruct *types,float p, float i, float d);
 
 
 //void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint);
-void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error);
+void PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float Error ,unsigned char typeflag);
 
-void PID_Para_Refush_All(void);
+
 #endif
 

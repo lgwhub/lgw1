@@ -50,7 +50,9 @@
 #include "Test.h" 
 
 #include "user.h"
-#include "HD_Prt3201.h"
+//#include "HD_Prt3201.h"
+#include "HD_159.h"
+
 	#if CONFIG_ADC
 			#include "adc.h"
 	#endif
@@ -67,7 +69,7 @@
 #include "ModbusProcess.h"
 #include "ModbusRecv.h"
 #include "pid.h"
-#include "PID_INC.h"
+//#include "PID_INC.h"
 
 #include "jump.h"
 

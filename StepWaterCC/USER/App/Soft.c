@@ -36,7 +36,7 @@ static  OS_STK         MyTASKStk[MyTASKStk_SIZE];
 static  OS_STK         TaskRecvStk[TaskRecvStk_SIZE];
 static  OS_STK         TaskTsStk[TaskTsStk_SIZE];
 static  OS_STK         TaskInput1Stk[TaskInput1Stk_SIZE];
-static  OS_STK         TaskKeyStk[TaskKeyStk_SIZE];
+static  OS_STK         TaskSyncUpStk[TaskSyncUpStk_SIZE];
 
 static  OS_STK         TaskVirPwmStk[TaskVirPwmStk_SIZE];
 static  OS_STK         TaskModbusStk[TaskModbusStk_SIZE];
@@ -118,13 +118,13 @@ OSSemTimePid_Heat = OSSemCreate(0);
                              (void          * ) 0,
                              (INT16U          )(OS_TASK_OPT_STK_CLR | OS_TASK_OPT_STK_CHK));
     
-    os_err = OSTaskCreateExt((void (*)(void *)) TaskKey,
+    os_err = OSTaskCreateExt((void (*)(void *)) TaskSyncUp,
                              (void          * ) 0,
-                             (OS_STK        * )&TaskKeyStk[TaskKeyStk_SIZE - 1],
-                             (INT8U           ) TaskKey_PRIO,
-                             (INT16U          ) TaskKey_PRIO,
-                             (OS_STK        * )&TaskKeyStk[0],
-                             (INT32U          ) TaskKeyStk_SIZE,
+                             (OS_STK        * )&TaskSyncUpStk[TaskSyncUpStk_SIZE - 1],
+                             (INT8U           ) TaskSyncUp_PRIO,
+                             (INT16U          ) TaskSyncUp_PRIO,
+                             (OS_STK        * )&TaskSyncUpStk[0],
+                             (INT32U          ) TaskSyncUpStk_SIZE,
                              (void          * ) 0,
                              (INT16U          )(OS_TASK_OPT_STK_CLR | OS_TASK_OPT_STK_CHK));
 
@@ -206,7 +206,7 @@ OSSemTimePid_Heat = OSSemCreate(0);
 
     	OSTaskNameSet(TaskTs_PRIO, "TaskTs", &os_err);
 			OSTaskNameSet(TaskRecv_PRIO, "TaskRecv", &os_err);
-    	OSTaskNameSet(TaskKey_PRIO, "TaskKey", &os_err);			
+    	OSTaskNameSet(TaskSyncUp_PRIO, "TaskSyncUp", &os_err);			
     	OSTaskNameSet(TaskInput1_PRIO, "TaskInput1", &os_err);
     	
     	OSTaskNameSet(TaskVirPwm_PRIO, "TaskVirPwm", &os_err);

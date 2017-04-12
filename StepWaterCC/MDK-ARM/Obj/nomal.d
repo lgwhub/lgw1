@@ -42,9 +42,8 @@
 .\Obj\nomal.o: ..\USER\App\StepMotor.h
 .\Obj\nomal.o: ..\USER\ADS8328.h
 .\Obj\nomal.o: ..\USER\App\AT24C1024.H
+.\Obj\nomal.o: ..\USER\App\pid.h
 .\Obj\nomal.o: ..\USER\App\Parameter.h
 .\Obj\nomal.o: ..\USER\App\ModbusProcess.h
 .\Obj\nomal.o: ..\USER\App\ModbusRecv.h
-.\Obj\nomal.o: ..\USER\App\pid.h
-.\Obj\nomal.o: ..\USER\App\PID_INC.h
 .\Obj\nomal.o: ..\USER\App\jump.h

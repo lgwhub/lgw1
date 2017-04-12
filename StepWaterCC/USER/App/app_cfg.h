@@ -42,7 +42,7 @@
 
 #define  CONFIG_HD_TIM		1
 
-#define SOFT_VER   2
+#define SOFT_VER   4
 
 
 /*
@@ -65,7 +65,7 @@
 
 
 #define  TaskInput1_PRIO          	 		(OS_LOWEST_PRIO - 24)
-#define  TaskTs_PRIO          	 		(OS_LOWEST_PRIO - 23)
+
 #define  TaskRecv_PRIO          	 		(OS_LOWEST_PRIO - 22)
 
 
@@ -76,8 +76,10 @@
 #define  TaskHeat_PRIO          	 		(OS_LOWEST_PRIO - 12)
 #define  TaskStatus_PRIO          	 		(OS_LOWEST_PRIO - 11)
 
-#define  TaskKey_PRIO          	 		(OS_LOWEST_PRIO - 9)
+#define  TaskSyncUp_PRIO          	 		(OS_LOWEST_PRIO - 9)
 
+
+#define  TaskTs_PRIO          	 		(OS_LOWEST_PRIO - 8)
 
 #define  MyTASK_PRIO          	 		(OS_LOWEST_PRIO - 7)
 #define  APP_TASK_BLINK_PRIO          	 (OS_LOWEST_PRIO - 6)
@@ -105,7 +107,7 @@
 #define  TaskTsStk_SIZE                          (200+2u)
 #define  TaskRecvStk_SIZE                          (76+2u)
 #define  TaskInput1Stk_SIZE                          (64+2u)
-#define  TaskKeyStk_SIZE                          (76+2u)
+#define  TaskSyncUpStk_SIZE                          (76+2u)
 
 #define  TaskVirPwmStk_SIZE                          (76+2u)
 #define  TaskModbusStk_SIZE                          (155+2u)

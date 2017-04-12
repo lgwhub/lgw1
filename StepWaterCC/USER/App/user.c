@@ -19,11 +19,14 @@ OS_EVENT *OSSemTimePid_Heat;
 uchar LenFromUser;	
 uchar BufFromUser[252];
 
+float TempratureCurrent[MAX_TEMPRATURE_CHNALL];   //控制用温度值
+
+
 //2400步在8分频时是300步步进电机的极限行程，开阀门
 //如果温度太高，超过设定值15度，则不用PID,直接打开240步，最多后退打开冷水次数为10+2次
-#define   STEPER_MOTOR_MAX_COUNT_OPEN     10
+#define   STEPER_MOTOR_MAX_COUNT_OPEN     5
 //如果温度太低，低于设定值15度，则不用PID,直接关闭32步，最多前进关闭冷水次数为75+15次
-#define   STEPER_MOTOR_MAX_COUNT_CLOSE    30
+#define   STEPER_MOTOR_MAX_COUNT_CLOSE    12
 //这样就不会一直在极限处动作了
 
 unsigned char lAddressKey;  //拨码开关PB12-PB15，值，最低4位
@@ -463,11 +466,16 @@ pdata = pdata;                          	 	// 避免编译警告
 lAddressKey=0;  //拨码开关PB12-PB15，值，最低4位
 
 TimeForSaveParam = 0;
+
+ Default_ParamInit0();//不需要保存的参数
+ Default_ParamInit1();    ////需要保存的参数
+ Default_ParamInit2();    ////整定值
+ 
  Default_ParamInit();    //?????????问题
- /*
+
   if(Load_Param()==0)		//取设定值
    {
-    
+ /*    
     gData[0].AnyError|=8;
     gData[1].AnyError|=8;
     gData[2].AnyError|=8;
@@ -478,8 +486,9 @@ TimeForSaveParam = 0;
      _Param_SwapMemery(0,cMemBufA);   //parameter ---> cMemBufB
     cMemBufB[Max_MemBuf-2] =  FlagParamInitnized; 
     Write_Param();
+*/  
    }
-*/
+
 #if CONFIG_CHECK_DEVICE_ID
 		if(GetStm32F103_DeviceId_Sum6() == gpParam->Stm32IdSum6)
 				{
@@ -531,20 +540,24 @@ void TaskTimePr(void * pdata)
      {
 
       OSTimeDly(OS_TICKS_PER_SEC/100);	    //延时0.01秒
-      timer1++;
       
-      if(timer1 >= 20)  //200ms
-           {
-            timer1  = 0 ;
-            OSSemPost(OSSemTimePid_Heat);   //电加热PID控制周期
-           }
-
-       timer2++;
-       if(timer2 >= 50 ) //0.5s
-           {
-            timer2 = 0;
-            OSSemPost(OSSemTimePid_StepMotor);   //水冷PID控制周期
-           }
+      if(Coldw.WorkMode != 1)  //普通工作方式还是冷热循环方式
+            { 
+               timer1++;
+               if(timer1 >= 20)  //200ms
+                    {
+                     timer1  = 0 ;
+                     OSSemPost(OSSemTimePid_Heat);   //电加热PID控制周期
+                    }
+         
+                timer2++;
+                //if(timer2 >= 50 ) //0.5s
+                if(timer2 >= 100 ) //1s	
+                    {
+                     timer2 = 0;
+                     OSSemPost(OSSemTimePid_StepMotor);   //水冷PID控制周期
+                    }
+             }
        }
 }
 ////////////////////
@@ -571,9 +584,9 @@ for(;;)
 			for(i=0;i<8;i++)
 			    {
           //PID_Calc(PID_ParaStruct *types, PidBufStruct *pidch, float NowPoint)
-          
-          HeatPidBuf[i].SetPoint = Coldw.T_set; //基本上多余
-			    PID_Calc(PidParam, &HeatPidBuf[i], ( HeatPidBuf[i].SetPoint - wAdcResoult [ i ] )); //一般是error = SetPoint - NewPoint ,这里反过来
+          //温度选择结温？
+          HeatPidBuf[i].SetPoint = Coldw.T_set; //基本上多余 
+			    PID_Calc(&Coldw.Pidx[1], &HeatPidBuf[i], ( HeatPidBuf[i].SetPoint - TempratureCurrent [ i ] ),0); //一般是error = SetPoint - NewPoint ,这里反过来
 			    
 			    
 			    
@@ -603,10 +616,10 @@ for(;;)
 			     }
 	     
 			     
-    Coldw.MONI_PX2 = HeatPidBuf[0].Px;  	   
-    Coldw.MONI_IX2 = HeatPidBuf[0].Ix;  	       
-    Coldw.MONI_DX2 = HeatPidBuf[0].Dx;  	        
-    Coldw.MONI_QX2 = HeatPidBuf[0].Qx; //0.14;
+//    Coldw.MONI_PX2 = HeatPidBuf[0].Px;  	   
+//    Coldw.MONI_IX2 = HeatPidBuf[0].Ix;  	       
+//    Coldw.MONI_DX2 = HeatPidBuf[0].Dx;  	        
+//    Coldw.MONI_QX2 = HeatPidBuf[0].Qx; //0.14;
     
 		
 
@@ -684,7 +697,7 @@ void TaskTs(void * pdata)
 INT8U err;
  
 unsigned char i; 
- 
+unsigned char channel;  //温度采集通道数
 
 	//  MAX_TEMPRATURE_CHNALL
 float *p_amp[8];	   
@@ -726,9 +739,20 @@ Led_Test_Adc_On1;
 
 //delay_us(5000);//5ms
 
- 
-
-         for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
+if(Coldw.device_type  == 0 )     //设备型号
+	{
+   channel =  MAX_TEMPRATURE_CHNALL;
+  }
+else if(Coldw.device_type  > MAX_TEMPRATURE_CHNALL )     //设备型号
+	{
+   channel =  MAX_TEMPRATURE_CHNALL;
+  }					
+else     //设备型号
+	{
+   channel =  Coldw.device_type;
+  }	  
+  
+					for ( i = 0 ; i < channel ; i++ )  //for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
             {
 	           CHECK_SelectChannel( i );  //TC温度采样 通道切换
 	           
@@ -737,9 +761,25 @@ Led_Test_Adc_On1;
              CHECK_AD590OneTCCheckUseADS8328( 5 , *p_amp[i]  , *p_bias[i]  ,  Coldw.T_bias_set ,  &( wAdcResoult [ i ] ));  //大约0.8ms
            
              Coldw.Ts[i]=wAdcResoult [ i ];
+             
+
+						     		         //温度选择结温？
+						     		         if(Coldw.SignalSelect == 1)
+						     		         	    {
+						     		         	    TempratureCurrent[i]  =  Coldw.Tin[i];		//结温控制用 
+						     		         	    }
+						     		         	else{
+						     		              TempratureCurrent[i]   =  wAdcResoult [ i ];
+						     		              }
+		           
+             
+             
+             
             }
 		
-		    Led_Test_Adc_Off1;
+		    Led_Test_Adc_Off1;			   
+				   
+				   
 				   
 				OSTimeDly(OS_TICKS_PER_SEC/100);	    //延时10ms			
 
@@ -1123,6 +1163,51 @@ void MotorsRun(unsigned char ch, signed short int steps)
 	}
 	
 }
+///////////////////////////////////////////////
+    
+void ReSetPositionOriginal(void)
+ {   
+    if(StepMot1.Position16>2400)StepMot1.Position16=2400;
+    if(StepMot2.Position16>2400)StepMot2.Position16=2400;    
+    if(StepMot3.Position16>2400)StepMot3.Position16=2400;
+    if(StepMot4.Position16>2400)StepMot4.Position16=2400;    
+    if(StepMot5.Position16>2400)StepMot5.Position16=2400;
+    if(StepMot6.Position16>2400)StepMot6.Position16=2400;
+}
+///////////////////////////////////////////////
+
+
+void MotorsToPosition(unsigned char ch, signed short int s16_Position)   //运行到绝对位置
+{
+	switch(ch)
+	{
+		case 0:
+		StepMotRun1(s16_Position + RelativeOrigin - StepMot1.Position16);	
+		break;
+			
+	  case 1:		
+		StepMotRun2(s16_Position + RelativeOrigin - StepMot2.Position16);	
+		break;
+		
+		case 2:
+			StepMotRun3(s16_Position + RelativeOrigin - StepMot3.Position16);			
+			
+		break;	
+	  case 3:		
+					StepMotRun4(s16_Position + RelativeOrigin - StepMot4.Position16);	
+		break;		
+		case 4:
+					StepMotRun5(s16_Position + RelativeOrigin - StepMot5.Position16);	
+			
+		break;	
+	  case 5:		
+					StepMotRun6(s16_Position + RelativeOrigin - StepMot6.Position16);	
+		break;		
+		
+	}
+	
+}
+
 ////////////////////
 void TaskStepMotor(void * pdata)
 {
@@ -1161,31 +1246,44 @@ OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.1秒
 
 RelativeOrigin=2104;    //相对坐标原点
 StepMot1.Position16=2400;
-//改进:
-//或者使用相对位置，这里继续设置为2400.。。。输入点加2105再输出到MOTOR
-//StepMot1.Position16用FPROM记录，下次开电时知道位置了，然后先走到0，然后向前走2400步，再校对为0
-//温度单位改为0.5度
+
 
 
 */
-/*
-for(;;)
-		{
+
+
     for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
              {
-    	        MotorsRun(i,2400);
+    	        MotorsRun(i,-2400);//后退2400步，在8分频时是300步步进电机的极限行程，退到最后，全开阀门
     	        
 						 }
-		OSTimeDly(OS_TICKS_PER_SEC*7);
+		OSTimeDly(OS_TICKS_PER_SEC*7); //延时6秒
+		
+		
     for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
              {							 
-							MotorsRun(i,-2400);
+							MotorsRun(i,2400);//前进2400步，在8分频时是300步步进电机的极限行程，前进到极限，关闭阀门	
 
               }
-		OSTimeDly(OS_TICKS_PER_SEC*7);		
-							
-    }
-*/
+              
+		OSTimeDly(OS_TICKS_PER_SEC*7);		 //延时6秒
+			//延时等待步进电机完成步数,2400*20*100us	= 4.8S			
+			
+		RelativeOrigin=2200;//2104;    //相对坐标原点
+    StepMot1.Position16=2400;
+    StepMot2.Position16=2400;    
+    StepMot3.Position16=2400;
+    StepMot4.Position16=2400;    
+    StepMot5.Position16=2400;
+    StepMot6.Position16=2400;    
+
+
+
+
+//StepMotRun1(PowerOutBuf[0]+RelativeOrigin-StepMot1.Position16);
+						
+		
+								
 
 for(;;)
 		{
@@ -1205,8 +1303,9 @@ for(;;)
 //			          break;
 //			       	
 //			          }
-     
-     
+     OSSemPend(OSSemMotors,0,&err);
+     ReSetPositionOriginal();
+     OSSemPost(OSSemMotors);
      
      for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
          {
@@ -1214,15 +1313,17 @@ for(;;)
 				 if( (Coldw.unit_onof_flag[i] == 1 ) || (Coldw.unit_onof_flag[i] == 2 ) )  //1 2 水冷自动工作
      	       {
 				
-				     if( ( wAdcResoult [ i ] -  Coldw.T_set ) > 15  )
+				     if( ( TempratureCurrent [ i ] -  Coldw.T_set ) > 12  )
 				    	  {//超
 				    		
-				    		if( Coldw.Counter_MaxOpen[i] < ( STEPER_MOTOR_MAX_COUNT_OPEN + 2 ))				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
+				    		if( Coldw.Counter_MaxOpen[i] < ( STEPER_MOTOR_MAX_COUNT_OPEN  ))				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
 				    				{//打开 (10 + 2 )x 240步  = 2880
 				             //后退200/2400步，2400步在8分频时是300步步进电机的极限行程，开阀门
 	                   OSSemPend(OSSemMotors,0,&err);	
-	                   MotorsRun(i, - ( MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_OPEN  ) );//后退240步
+	                   MotorsRun(i, - 240);//( MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_OPEN  ) );//后退240步
                      OSSemPost(OSSemMotors);			    					
+				    					
+				    				Coldw.FAN_duty[i] = -240;
 				    					
 				    				Coldw.Counter_MaxOpen[i]++;
 				    				}
@@ -1230,15 +1331,17 @@ for(;;)
 				    		Coldw.Counter_MaxClose[i]  =  0;
 				    		
 				    	  }
-						 else if( ( Coldw.T_set -  wAdcResoult [ i ] ) > 15  )
+						 else if( ( Coldw.T_set -  TempratureCurrent [ i ] ) > 12  )
 							{//太低
-								if( Coldw.Counter_MaxClose[i]	< (STEPER_MOTOR_MAX_COUNT_CLOSE+5) )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
+								if( Coldw.Counter_MaxClose[i]	< (STEPER_MOTOR_MAX_COUNT_CLOSE ) )			//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
 										{//关闭 (30+5) x 80步 2880
 										//前进2400步，在8分频时是300步步进电机的极限行程，前进到极限，关闭阀门	
 
 	                  OSSemPend(OSSemMotors,0,&err);	
-										MotorsRun(i,MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_CLOSE );
+										MotorsRun(i,240);//MOTOR_MAX_STEP / STEPER_MOTOR_MAX_COUNT_CLOSE );
 										OSSemPost(OSSemMotors);
+										
+										Coldw.FAN_duty[i] = 240;
 										
 							      Coldw.Counter_MaxClose[i]++;
 									  }
@@ -1250,13 +1353,21 @@ for(;;)
 									Coldw.Counter_MaxOpen[i]   =  0;				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围
             			Coldw.Counter_MaxClose[i]  =  0;				//温度低于设定值15度以上，不使用PID,强制关闭水冷，关n次后暂停，然后等温度到正常范围
            				
-           				PID_Inc_Calc( &StepPidBuf[i], Coldw.T_set +0.2 -  wAdcResoult [ i ]);		//水冷加高0.2度
+           				//PID_Inc_Calc( &StepPidBuf[i], Coldw.T_set +0.2 -  TempratureCurrent [ i ]);		//水冷加高0.2度
+           				
+           				//StepPidBuf[i].SetPoint = Coldw.T_set; //基本上多余
+			    PID_Calc(&Coldw.Pidx[0], &StepPidBuf[i], (Coldw.T_set +0.2 -  TempratureCurrent [ i ]),1); //一般是error = SetPoint - NewPoint ,这里反过来
+           
+
+           				
+          ///////////////////// 				
            				
            				//输出 FOLT ->>>  INT
            				Coldw.FAN_duty[i] = StepPidBuf[i].Qx;
            					
            				OSSemPend(OSSemMotors,0,&err);	
-                  MotorsRun(i,Coldw.FAN_duty[i]);	
+                  
+                  MotorsToPosition(i, (signed short int)Coldw.FAN_duty[i]);// + RelativeOrigin - StepMot1.Position16);
                   OSSemPost(OSSemMotors);
 							}
 					
@@ -1267,122 +1378,113 @@ for(;;)
     Coldw.MONI_DX1 = StepPidBuf[0].Dx;//0.13;
     Coldw.MONI_QX1 = StepPidBuf[0].Qx; //0.14;
                   
+    Coldw.MONI_PX2 = StepPidBuf[1].Px;  	   
+    Coldw.MONI_IX2 = StepPidBuf[1].Ix;  	       
+    Coldw.MONI_DX2 = StepPidBuf[1].Dx;  	        
+    Coldw.MONI_QX2 = StepPidBuf[1].Qx; //0.14;                  
+                  
+                  
     OSTimeDly(OS_TICKS_PER_SEC/500);  //补充延时
 
 		}
 }
 /////////////////////////////
 
-
-void ProcessKey(uchar kb,uchar kc)
+/////////////////////////////
+//温度差
+#define TEMPRATURE_REF1  (1.2)
+//#define TEMPRATURE_REF1  (0.4)
+void TaskSyncUp(void * pdata)
 {
-	
-
-			if(kb&BIT0)
-					{//开步进电机
-						
-						
-						
-						if(kb!=kc)
-							{
-						//		StepMotRun1(  500);//MOTOR_FORWORD_STEP);//MOTOR_TEST_STEP);
-						//		StepMotRun2( 500);//MOTOR_FORWORD_STEP);//MOTOR_TEST_STEP);
-						
-
-
-							}
-					}
-		if(kb&BIT1)
-					{//开步进电机  反向
-						
-						
-						if(kb!=kc)
-							{
-								
-					//	StepMotRun1(-500);//MOTOR_BACK_STEP);
-					//	StepMotRun2(-500);//MOTOR_TEST_STEP);		
-
-	
-							}
-					}
-					
-		if(kb&BIT2)
-					{//关步进电机
-						
-						StepMotStop1();
-						
-						StepMotStop2();
-								
-						
-
-					}				
-										
-}
-void TaskKey(void * pdata)
-{
-//INT8U err;
+INT8U err;
  
-	uchar ka,kb,kc,kd;
+unsigned char old_mode,i,flag_temp;
+//unsigned char max_ch;
+float min_temp;
+
 
 	pdata = pdata;     // 避免编译警告	   
-	FlagKey=0;
-	ka=0;
-	kb=0;
-	kc=0;
-	kd=0;
 
+old_mode = 0;
+
+OSTimeDly(OS_TICKS_PER_SEC*2);	    //延时2秒		
 
 		for(;;)
 						{
 						//OS_ENTER_CRITICAL();
 						//OS_EXIT_CRITICAL();
-						OSTimeDly(OS_TICKS_PER_SEC/20);	    //延时0.05秒		
-						
-					if(InPin_K3)
-							{//没有按键
-								ka&=(~BIT0);		//
+						OSTimeDly(OS_TICKS_PER_SEC/10);	    //延时0.1秒		
+            
+            if(Coldw.WorkMode == 1)  //普通工作方式还是冷热循环方式
+						     {//冷热循环方式
+						     	if(Coldw.WorkMode != old_mode)
+						     		{//先关水
+						     			//old_mode = Coldw.WorkMode;
+						     		   
+						     		  OSSemPend(OSSemMotors,0,&err);
+                      
+                      ReSetPositionOriginal();
+                      
+                      for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
+                           {							 
+                           MotorsToPosition(i, 250);// + RelativeOrigin - StepMot1.Position16);  关水
+                           
+                           Coldw.FAN_duty[i] = 250;
+                           }
+                     
+                     OSSemPost(OSSemMotors);                      
+		                 
+		                 
+		                 
+		                 OSTimeDly(OS_TICKS_PER_SEC);		 //延时1秒
 
-							}
-					else {
-								ka|=BIT0;
-
-								}
-
-					if(InPin_K4)
-							{//没有按键
-								ka&=(~BIT1);		//
-							}
-					else {
-								ka|=BIT1;
-								}
-
-					if(InPin_K5)
-							{//没有按键
-								ka&=(~BIT2);		//
-							}
-					else {
-								ka|=BIT2;
-								}		
-								
-											
-						if(kb==ka)
-							{//滤波kb
-								
-								ProcessKey(kb,kc);
-
-								if(kc!=kb)
-										{//有变化
-											kd=kc^kb;		//变化
-										EventTimeLed=4;
-										}
-								kc=kb;			//键盘值	
-							}
-						else{//滤波kb
-								kb=ka;
-							}
-							
-		
-				}	
+						     		}
+						     	else{//平常工作
+						     		 
+						     		///////////////////////  
+                    min_temp = 5000;  //不可能的高温
+                    //max_ch  = MAX_TEMPRATURE_CHNALL+1;       
+						     		for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
+						     		     {
+						     		     	if( Coldw.unit_onof_flag[i] != 0)
+						     		     		{ //使用的几路取最小值
+						     			        if( min_temp > TempratureCurrent[i] )
+						     			        	{
+						     			        		min_temp = TempratureCurrent[i];
+						     			        		//max_ch = i;
+						     			        	}
+						     			      }
+						     		     }         
+						     		 ///////////////////////    
+						     		 for ( i = 0 ; i < MAX_TEMPRATURE_CHNALL ; i++ )
+						     		     {//温度高的等温度最低的
+						     		     
+						     		      flag_temp = 0;   		  	   
+						     		         		  	   	
+						     		     if (TempratureCurrent[i] < Coldw.T_set)
+						     		         	{
+						     		         		if( Coldw.unit_onof_flag[i] != 0)
+						     		         			{//开
+						     		         		  if ( ( TempratureCurrent[i] - min_temp ) <  TEMPRATURE_REF1)
+							     		         		  			{//
+						     		         		  					//Coldw.TC_duty[i] = (196+4) ;  //MAX_PID_INTEGRAL_2
+						     		         		  					flag_temp = 200;
+						     		         		  				}
+						     		         	    }
+						     		         	} 
+						     		      if( flag_temp != 0)
+						     		      	    {//开
+						     		            Coldw.TC_duty[i] = (196+4) ;  //MAX_PID_INTEGRAL_2
+						     		            }
+						     		      else  {//关
+						     		         		  Coldw.TC_duty[i] = (1-1) ;
+						     		         		 }   
+						     		     }   
+                     ////////////////////////////////////////
+						     	   }
+						     }	
+				    old_mode = Coldw.WorkMode;
+				    }	
 }
 
 
@@ -1413,6 +1515,80 @@ void TaskInput1(void * pdata)
 
 
 
+////////////////////////////////////////////////
+void TaskSave(void * pdata)
+{
+INT8U err;
+CPU_SR         cpu_sr;
+
+ 
+	pdata = pdata;                          	 	// 避免编译警告	   
+
+
+
+
+	for(;;)
+				{
+				 
+				 
+          
+							
+        if(FlagSetAllDefault > 0)//flag
+        	   {
+        	   	
+        	   	if(3 == FlagSetAllDefault)
+				 	      {
+         
+                Default_ParamInit1();    ////需要保存的参数
+                Default_ParamInit2();    ////整定值
+                }
+        	   	else if(2 == FlagSetAllDefault)
+				 	      {
+         
+                Default_ParamInit1();    ////需要保存的参数
+
+                }
+        	   	
+        	   	Default_ParamInit0();//不需要保存的参数
+        	   	
+        	   	FlagSetAllDefault = 0 ;
+        	   	
+        	   	
+             //自动恢复默认值
+             cMemBufA[Max_MemBuf-2] =  FlagParamInitnized; 
+             
+             OS_ENTER_CRITICAL();   //CPU_SR         cpu_sr;
+             _Param_SwapMemery(0,cMemBufA);   //parameter ---> cMemBufB
+              OS_EXIT_CRITICAL();
+              
+             Write_Param();
+             
+             }
+          
+          
+          
+          
+          if(TimeForSaveParam==1)  //延时保存
+          	{
+							//////
+						
+						 OS_ENTER_CRITICAL();   //CPU_SR         cpu_sr;
+	            _Param_SwapMemery(0,cMemBufA);   //parameter ---> cMemBufB
+	            TimeForSaveParam = 0;
+             OS_EXIT_CRITICAL();
+             Write_Param();
+            
+						}
+						
+					if(TimeForSaveParam>0)
+						{
+							TimeForSaveParam	-- ;
+						}
+				
+				
+				OSTimeDly(OS_TICKS_PER_SEC);	    //延时1秒		
+			}		
+}
 
 
 

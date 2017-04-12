@@ -42,9 +42,8 @@
 .\Obj\stm32f10x_it.o: ..\USER\App\StepMotor.h
 .\Obj\stm32f10x_it.o: ..\USER\ADS8328.h
 .\Obj\stm32f10x_it.o: ..\USER\App\AT24C1024.H
+.\Obj\stm32f10x_it.o: ..\USER\App\pid.h
 .\Obj\stm32f10x_it.o: ..\USER\App\Parameter.h
 .\Obj\stm32f10x_it.o: ..\USER\App\ModbusProcess.h
 .\Obj\stm32f10x_it.o: ..\USER\App\ModbusRecv.h
-.\Obj\stm32f10x_it.o: ..\USER\App\pid.h
-.\Obj\stm32f10x_it.o: ..\USER\App\PID_INC.h
 .\Obj\stm32f10x_it.o: ..\USER\App\jump.h

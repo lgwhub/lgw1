@@ -219,10 +219,13 @@ void  Init_Tim3 (void)
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
-    //TIM_TimeBaseStructure.TIM_Period        = 50;  //50us
+    TIM_TimeBaseStructure.TIM_Period        = 50;  //50us
     //TIM_TimeBaseStructure.TIM_Period        = 250;  //250us
-    TIM_TimeBaseStructure.TIM_Period        = (25);  //25us  
-    //TIM_TimeBaseStructure.TIM_Period        = 15;  //15us            
+    //TIM_TimeBaseStructure.TIM_Period        = (100);  //100us
+    //TIM_TimeBaseStructure.TIM_Period        = (25);  //25us   
+    //TIM_TimeBaseStructure.TIM_Period        = 15;  //15us
+    
+                
     TIM_TimeBaseStructure.TIM_Prescaler     = 71;//71;	//72·ÖÆµ
     TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;
     TIM_TimeBaseStructure.TIM_CounterMode   = TIM_CounterMode_Up;

@@ -42,9 +42,8 @@
 .\Obj\os_cpu_c.o: ..\USER\App\StepMotor.h
 .\Obj\os_cpu_c.o: ..\USER\ADS8328.h
 .\Obj\os_cpu_c.o: ..\USER\App\AT24C1024.H
+.\Obj\os_cpu_c.o: ..\USER\App\pid.h
 .\Obj\os_cpu_c.o: ..\USER\App\Parameter.h
 .\Obj\os_cpu_c.o: ..\USER\App\ModbusProcess.h
 .\Obj\os_cpu_c.o: ..\USER\App\ModbusRecv.h
-.\Obj\os_cpu_c.o: ..\USER\App\pid.h
-.\Obj\os_cpu_c.o: ..\USER\App\PID_INC.h
 .\Obj\os_cpu_c.o: ..\USER\App\jump.h

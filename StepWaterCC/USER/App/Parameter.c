@@ -5,6 +5,7 @@
 unsigned char cMemBufA[Max_MemBuf+2];
 unsigned char cMemBufB[Max_MemBuf+2];
 
+unsigned char FlagSetAllDefault;
 unsigned short int TimeForSaveParam;
 
 _param_water8  Coldw;
@@ -131,19 +132,35 @@ unsigned short int Stm32IdSum6;
 
 
 ////////////////////////////////////////////////////
+// Default_ParamInit0();//不需要保存的参数
+// Default_ParamInit1();    ////需要保存的参数
+// Default_ParamInit2();    ////整定值
 
+void Default_ParamInit0(void)
+{
+}
+void Default_ParamInit1(void)
+{
+}
+void Default_ParamInit2(void)
+{
+}
 void Default_ParamInit(void)
 {
 
 	unsigned char i;
-	
+	TimeAutoLock1=0;
+TimeAutoLock2=0;
+TimeAutoLock3=0;
+
+FlagSetAllDefault = 0;	
                                            //2字节
     Coldw.SoftVer = SOFT_VER;  
 
     Coldw.CMD          = 0;     //命令寄存器
     Coldw.WATCHING     = 0;     //监视状态
     Coldw.BOARD_STATE  = 1;     //插板状态
-    Coldw.device_type  = 2;     //设备型号
+    Coldw.device_type  = 6;     //设备型号
     Coldw.Ts1_AMP      = 1.001; //温度采样放大倍数1
     Coldw.Ts1_BIAS     = 0.01;  //温度采样偏移系数1
     Coldw.Ts2_AMP      = 1.002; //温度采样放大倍数2
@@ -162,11 +179,7 @@ void Default_ParamInit(void)
     Coldw.Ts8_BIAS     = 0.08;  //温度采样偏移系数2
 
 
-
-
-
-
-
+/*
     Coldw.PID_P1 = 1;//35;//3;                //水冷增量PID
     Coldw.PID_I1 = 3;//5;//1;
     Coldw.PID_D1 = 200;//100;//4;
@@ -174,7 +187,7 @@ void Default_ParamInit(void)
     Coldw.PID_P2 = 1.01;                //电加热PID
     Coldw.PID_I2 = 1.02;
     Coldw.PID_D2 = 1.03;    
-    
+*/    
     Coldw.MONI_PX1 = 0.11;                //
     Coldw.MONI_IX1 = 0.12;
     Coldw.MONI_DX1 = 0.13;
@@ -196,18 +209,20 @@ void Default_ParamInit(void)
     
     Coldw.TC_sx = 125;                //温度上限设置值
     
-        //
-    Coldw.TC_duty_set = 0;          //
-    Coldw.FAN_duty_set = 0;         //
+    for(i=0;i<MAX_TEMPRATURE_CHNALL;i++)
+	    {
+    Coldw.TC_duty_set[i] = 0+i;          //
+    Coldw.FAN_duty_set[i] = 16+i;         //
+	    }
     Coldw.Moter_step_set = 0;       //强制走几步
     Coldw.Moter_direction = 0;      //方向
     Coldw.one_unit_flag = 0;        //
     Coldw.one_onoff_flag = 0;       //
     
     
-    for(i=0;i<8;i++)
+    for(i=0;i<MAX_TEMPRATURE_CHNALL;i++)
     {
-	Coldw.unit_onof_flag[i]=1;					   
+	Coldw.unit_onof_flag[i]=0;					   
     Coldw.limit_recode[i] = 0;
     Coldw.Ts[i] = (0.1)*i;                //
     Coldw.TC_duty[i] = 0;           //
@@ -227,6 +242,16 @@ void Default_ParamInit(void)
     Coldw.lstats=0;  //统计信息  
     
     
+    
+    Coldw.WorkMode = 0;  //普通工作方式还是冷热循环方式
+    Coldw.SignalSelect = 0;  //壳温还是结温
+    
+    for(i=0;i<MAX_TEMPRATURE_CHNALL;i++)
+    		{
+    			Coldw.Tin[i] = 150+i;		//结温控制用    
+    
+       }
+       
     for(i=0;i<MAX_TEMPRATURE_CHNALL;i++)
     {
      Coldw.Counter_MaxOpen[i]=0;				//温度超过设定值15度以上，不使用PID,强制打开水冷，开n次后暂停，然后等温度到正常范围

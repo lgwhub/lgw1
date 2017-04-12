@@ -101,7 +101,7 @@ void SoftReset(void)
 
 
 //////////////////////
-void ModbusCommand(void)//收到参数时执行一下
+void ModbusCommand1(void)//收到参数时执行一下
 {
 //Coldw.lyy_reserve,Coldw.lSysSwitch_reserve
       if(Coldw.lBackupRestore == 0 ) 

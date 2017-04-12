@@ -62,7 +62,7 @@ void TaskStatus(void * pdata);
 void TaskTs(void * pdata);
 void TaskRecv(void * pdata);
 void TaskInput1(void * pdata);
-void TaskKey(void * pdata);
+void TaskSyncUp(void * pdata);
 
 void ModbusCommand2(void);
 
